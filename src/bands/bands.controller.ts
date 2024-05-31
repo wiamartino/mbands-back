@@ -44,4 +44,9 @@ export class BandsController {
   async remove(@Param('id') id: string) {
     return this.bandsService.remove(+id);
   }
+
+  @Get('search/:name')
+  async searchByName(@Param('name') name: string) {
+    return this.bandsService.searchByName(name);
+  }
 }

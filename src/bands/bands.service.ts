@@ -36,4 +36,11 @@ export class BandsService {
   async remove(id: number): Promise<DeleteResult> {
     return this.bandsRepository.delete(id);
   }
+
+  async searchByName(name: string): Promise<Band[]> {
+    return this.bandsRepository.find({
+      where: { name: name },
+      relations: ['members', 'albums'],
+    });
+  }
 }
