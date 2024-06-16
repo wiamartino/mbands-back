@@ -25,6 +25,10 @@ export class AlbumsService {
     return this.albumsRepository.findOne({ where: { id } });
   }
 
+  async findByBandId(bandId: number): Promise<Album[]> {
+    return this.albumsRepository.find({ where: { band: { id: bandId } } });
+  }
+
   async update(id: number, updateAlbumDto: UpdateAlbumDto) {
     return this.albumsRepository.update(id, updateAlbumDto);
   }
