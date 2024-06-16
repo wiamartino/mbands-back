@@ -21,11 +21,11 @@ export class Band {
   @Column()
   active: boolean;
 
-  @OneToMany(() => Member, (member) => member.band)
-  members: string[];
+  @OneToMany(() => Member, (member) => member.band, { cascade: true })
+  members: Member[];
 
-  @OneToMany(() => Album, (album) => album.band)
-  albums: string[];
+  @OneToMany(() => Album, (album) => album.band, { cascade: true })
+  albums: Album[];
 
   @Column()
   website: string;
