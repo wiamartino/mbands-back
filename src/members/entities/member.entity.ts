@@ -7,6 +7,9 @@ export class Member {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  name: string;
+
   @Column({
     type: 'enum',
     enum: ['Guitar', 'Bass', 'Drums', 'Keyboard', 'Vocals'],
