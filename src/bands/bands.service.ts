@@ -43,4 +43,11 @@ export class BandsService {
       relations: ['members', 'albums'],
     });
   }
+
+  async searchByFirstLetter(firstLetter: string): Promise<Band[]> {
+    return this.bandsRepository
+      .createQueryBuilder('band')
+      .where('band.name LIKE :firstLetter', { firstLetter: `${firstLetter}%` })
+      .getMany();
+  }
 }

@@ -49,4 +49,9 @@ export class BandsController {
   async searchByName(@Param('name') name: string) {
     return this.bandsService.searchByName(name);
   }
+
+  @Get('lists/:firstLetter')
+  async searchByFirstLetter(@Param('firstLetter') firstLetter: string) {
+    return this.bandsService.searchByFirstLetter(firstLetter);
+  }
 }
