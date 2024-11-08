@@ -7,12 +7,15 @@ import {
   Param,
   Delete,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { BandsService } from './bands.service';
 import { CreateBandDto } from './dto/create-band.dto';
 import { UpdateBandDto } from './dto/update-band.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('bands')
+@UseGuards(JwtAuthGuard)
 export class BandsController {
   constructor(private readonly bandsService: BandsService) {}
 
