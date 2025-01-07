@@ -13,8 +13,9 @@ export class AuthService {
     if (!user) {
       return null;
     }
-    // const isMatch: boolean = bcrypt.compareSync(password, user.password);
-    const isMatch: boolean = bcrypt.hashSync(password, 10) === user.password;
+
+    const isMatch: boolean = password === user.password;
+
     if (!isMatch) {
       throw new BadRequestException('Password does not match');
     }
