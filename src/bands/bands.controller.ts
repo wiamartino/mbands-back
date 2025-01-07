@@ -8,6 +8,7 @@ import {
   Delete,
   NotFoundException,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { BandsService } from './bands.service';
 import { CreateBandDto } from './dto/create-band.dto';
@@ -25,8 +26,8 @@ export class BandsController {
   }
 
   @Get()
-  async findAll() {
-    return this.bandsService.findAll();
+  async findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
+    return this.bandsService.findAll(+page, +limit);
   }
 
   @Get(':id')

@@ -17,8 +17,12 @@ export class BandsService {
     return this.bandsRepository.save(band);
   }
 
-  async findAll(): Promise<Band[]> {
-    return this.bandsRepository.find({ relations: ['members', 'albums'] });
+  async findAll(page: number, limit: number): Promise<Band[]> {
+    return this.bandsRepository.find({
+      skip: (page - 1) * limit,
+      take: limit,
+      relations: ['members', 'albums'],
+    });
   }
 
   async findOne(id: number): Promise<Band> {
