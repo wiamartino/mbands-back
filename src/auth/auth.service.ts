@@ -14,8 +14,9 @@ export class AuthService {
       return null;
     }
 
-    const isMatch: boolean = password === user.password;
-
+    // const isMatch: boolean = password === user.password;
+    const isMatch: boolean = await bcrypt.compare(password, user.password);
+    
     if (!isMatch) {
       throw new BadRequestException('Password does not match');
     }
