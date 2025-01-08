@@ -1,328 +1,365 @@
 {
-    "info": {
-      "name": "My API Collection",
-      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  "info": {
+    "name": "All Entities Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john\",\n  \"password\": \"secret\",\n  \"email\": \"john@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john\",\n  \"password\": \"secret\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
     },
-    "item": [
-      {
-        "name": "Bands",
-        "item": [
-          {
-            "name": "Create Band",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"name\": \"Band Name\",\n  \"genre\": \"Rock\",\n  \"yearFormed\": 2000,\n  \"country\": \"USA\",\n  \"active\": true,\n  \"website\": \"http://bandwebsite.com\"\n}"
-              },
-              "url": {
-                "raw": "{{baseUrl}}/bands",
-                "host": ["{{baseUrl}}"],
-                "path": ["bands"]
-              }
-            }
-          },
-          {
-            "name": "Get All Bands",
-            "request": {
-              "method": "GET",
-              "url": {
-                "raw": "{{baseUrl}}/bands",
-                "host": ["{{baseUrl}}"],
-                "path": ["bands"]
-              }
-            }
-          },
-          {
-            "name": "Get Band by ID",
-            "request": {
-              "method": "GET",
-              "url": {
-                "raw": "{{baseUrl}}/bands/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["bands", ":id"]
-              }
-            }
-          },
-          {
-            "name": "Update Band",
-            "request": {
-              "method": "PATCH",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"name\": \"Updated Band Name\"\n}"
-              },
-              "url": {
-                "raw": "{{baseUrl}}/bands/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["bands", ":id"]
-              }
-            }
-          },
-          {
-            "name": "Delete Band",
-            "request": {
-              "method": "DELETE",
-              "url": {
-                "raw": "{{baseUrl}}/bands/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["bands", ":id"]
-              }
+    {
+      "name": "Bands",
+      "item": [
+        {
+          "name": "Create Band",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Band Name\",\n  \"genre\": \"Rock\",\n  \"yearFormed\": 2000,\n  \"country\": \"USA\",\n  \"active\": true,\n  \"website\": \"http://bandwebsite.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bands",
+              "host": ["{{baseUrl}}"],
+              "path": ["bands"]
             }
           }
-        ]
-      },
-      {
-        "name": "Members",
-        "item": [
-          {
-            "name": "Create Member",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"name\": \"Member Name\",\n  \"instrument\": \"Guitar\",\n  \"band\": 1\n}"
-              },
-              "url": {
-                "raw": "{{baseUrl}}/members",
-                "host": ["{{baseUrl}}"],
-                "path": ["members"]
-              }
-            }
-          },
-          {
-            "name": "Get All Members",
-            "request": {
-              "method": "GET",
-              "url": {
-                "raw": "{{baseUrl}}/members",
-                "host": ["{{baseUrl}}"],
-                "path": ["members"]
-              }
-            }
-          },
-          {
-            "name": "Get Member by ID",
-            "request": {
-              "method": "GET",
-              "url": {
-                "raw": "{{baseUrl}}/members/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["members", ":id"]
-              }
-            }
-          },
-          {
-            "name": "Update Member",
-            "request": {
-              "method": "PATCH",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"name\": \"Updated Member Name\"\n}"
-              },
-              "url": {
-                "raw": "{{baseUrl}}/members/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["members", ":id"]
-              }
-            }
-          },
-          {
-            "name": "Delete Member",
-            "request": {
-              "method": "DELETE",
-              "url": {
-                "raw": "{{baseUrl}}/members/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["members", ":id"]
-              }
+        },
+        {
+          "name": "Get All Bands",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/bands",
+              "host": ["{{baseUrl}}"],
+              "path": ["bands"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
             }
           }
-        ]
-      },
-      {
-        "name": "Albums",
-        "item": [
-          {
-            "name": "Create Album",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"name\": \"Album Name\",\n  \"releaseDate\": \"2023-01-01\",\n  \"genre\": \"Rock\",\n  \"band\": 1\n}"
-              },
-              "url": {
-                "raw": "{{baseUrl}}/albums",
-                "host": ["{{baseUrl}}"],
-                "path": ["albums"]
-              }
-            }
-          },
-          {
-            "name": "Get All Albums",
-            "request": {
-              "method": "GET",
-              "url": {
-                "raw": "{{baseUrl}}/albums",
-                "host": ["{{baseUrl}}"],
-                "path": ["albums"]
-              }
-            }
-          },
-          {
-            "name": "Get Album by ID",
-            "request": {
-              "method": "GET",
-              "url": {
-                "raw": "{{baseUrl}}/albums/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["albums", ":id"]
-              }
-            }
-          },
-          {
-            "name": "Update Album",
-            "request": {
-              "method": "PATCH",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"name\": \"Updated Album Name\"\n}"
-              },
-              "url": {
-                "raw": "{{baseUrl}}/albums/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["albums", ":id"]
-              }
-            }
-          },
-          {
-            "name": "Delete Album",
-            "request": {
-              "method": "DELETE",
-              "url": {
-                "raw": "{{baseUrl}}/albums/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["albums", ":id"]
-              }
+        },
+        {
+          "name": "Get Band by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/bands/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["bands", ":id"]
             }
           }
-        ]
-      },
-      {
-        "name": "Songs",
-        "item": [
-          {
-            "name": "Create Song",
-            "request": {
-              "method": "POST",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"title\": \"Song Title\",\n  \"band\": 1\n}"
-              },
-              "url": {
-                "raw": "{{baseUrl}}/songs",
-                "host": ["{{baseUrl}}"],
-                "path": ["songs"]
-              }
-            }
-          },
-          {
-            "name": "Get All Songs",
-            "request": {
-              "method": "GET",
-              "url": {
-                "raw": "{{baseUrl}}/songs",
-                "host": ["{{baseUrl}}"],
-                "path": ["songs"]
-              }
-            }
-          },
-          {
-            "name": "Get Song by ID",
-            "request": {
-              "method": "GET",
-              "url": {
-                "raw": "{{baseUrl}}/songs/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["songs", ":id"]
-              }
-            }
-          },
-          {
-            "name": "Update Song",
-            "request": {
-              "method": "PATCH",
-              "header": [
-                {
-                  "key": "Content-Type",
-                  "value": "application/json"
-                }
-              ],
-              "body": {
-                "mode": "raw",
-                "raw": "{\n  \"title\": \"Updated Song Title\"\n}"
-              },
-              "url": {
-                "raw": "{{baseUrl}}/songs/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["songs", ":id"]
-              }
-            }
-          },
-          {
-            "name": "Delete Song",
-            "request": {
-              "method": "DELETE",
-              "url": {
-                "raw": "{{baseUrl}}/songs/:id",
-                "host": ["{{baseUrl}}"],
-                "path": ["songs", ":id"]
-              }
+        },
+        {
+          "name": "Update Band",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Band\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bands/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["bands", ":id"]
             }
           }
-        ]
-      }
-    ]
-  }
+        },
+        {
+          "name": "Delete Band",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/bands/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["bands", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Members",
+      "item": [
+        {
+          "name": "Create Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Member Name\",\n  \"instrument\": \"Guitar\",\n  \"band\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/members",
+              "host": ["{{baseUrl}}"],
+              "path": ["members"]
+            }
+          }
+        },
+        {
+          "name": "Get All Members",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/members",
+              "host": ["{{baseUrl}}"],
+              "path": ["members"]
+            }
+          }
+        },
+        {
+          "name": "Get Member by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/members/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["members", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Update Member",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Member\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/members/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["members", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Member",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/members/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["members", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Albums",
+      "item": [
+        {
+          "name": "Create Album",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Album Name\",\n  \"releaseDate\": \"2023-01-01\",\n  \"genre\": \"Rock\",\n  \"band\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/albums",
+              "host": ["{{baseUrl}}"],
+              "path": ["albums"]
+            }
+          }
+        },
+        {
+          "name": "Get All Albums",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/albums",
+              "host": ["{{baseUrl}}"],
+              "path": ["albums"]
+            }
+          }
+        },
+        {
+          "name": "Get Album by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/albums/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["albums", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Update Album",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Album Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/albums/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["albums", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Album",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/albums/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["albums", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Songs",
+      "item": [
+        {
+          "name": "Create Song",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Song Title\",\n  \"band\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/songs",
+              "host": ["{{baseUrl}}"],
+              "path": ["songs"]
+            }
+          }
+        },
+        {
+          "name": "Get All Songs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/songs",
+              "host": ["{{baseUrl}}"],
+              "path": ["songs"]
+            }
+          }
+        },
+        {
+          "name": "Get Song by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/songs/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["songs", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Update Song",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Song Title\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/songs/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["songs", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Song",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/songs/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["songs", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get User by Username",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/users/:username",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":username"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
