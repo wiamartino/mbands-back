@@ -1,5 +1,5 @@
-import { Band } from 'src/bands/entities/band.entity';
-import { Song } from 'src/songs/entities/song.entity';
+import { Band } from '../../bands/entities/band.entity';
+import { Song } from '../../songs/entities/song.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,

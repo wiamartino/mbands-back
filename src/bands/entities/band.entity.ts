@@ -1,5 +1,5 @@
-import { Album } from 'src/albums/entities/album.entity';
-import { Member } from 'src/members/entities/member.entity';
+import { Album } from '../../albums/entities/album.entity';
+import { Member } from '../../members/entities/member.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()

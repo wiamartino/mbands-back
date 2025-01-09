@@ -13,7 +13,7 @@ import {
 import { BandsService } from './bands.service';
 import { CreateBandDto } from './dto/create-band.dto';
 import { UpdateBandDto } from './dto/update-band.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('bands')
 @UseGuards(JwtAuthGuard)
