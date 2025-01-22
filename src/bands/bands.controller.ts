@@ -58,4 +58,19 @@ export class BandsController {
   async searchByFirstLetter(@Param('firstLetter') firstLetter: string) {
     return this.bandsService.searchByFirstLetter(firstLetter);
   }
+
+  @Get('genre/:genre')
+  async findByGenre(@Param('genre') genre: string) {
+    return this.bandsService.findByGenre(genre);
+  }
+
+  @Get('year/:year')
+  async findByYear(@Param('year') year: number) {
+    return this.bandsService.findByYear(+year);
+  }
+
+  @Get('country/:country')
+  async findByCountry(@Param('country') country: string) {
+    return this.bandsService.findByCountry(country);
+  }
 }

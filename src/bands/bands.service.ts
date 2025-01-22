@@ -54,4 +54,25 @@ export class BandsService {
       .where('band.name LIKE :firstLetter', { firstLetter: `${firstLetter}%` })
       .getMany();
   }
+
+  async findByGenre(genre: string): Promise<Band[]> {
+    return this.bandsRepository.find({
+      where: { genre },
+      relations: ['members', 'albums'],
+    });
+  }
+
+  async findByYear(year: number): Promise<Band[]> {
+    return this.bandsRepository.find({
+      where: { yearFormed: year },
+      relations: ['members', 'albums'],
+    });
+  }
+
+  async findByCountry(country: string): Promise<Band[]> {
+    return this.bandsRepository.find({
+      where: { country },
+      relations: ['members', 'albums'],
+    });
+  }
 }
