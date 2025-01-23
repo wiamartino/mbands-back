@@ -1,10 +1,31 @@
-import { Album } from 'src/albums/entities/album.entity';
+import { IsString, IsInt, IsBoolean, IsArray, IsOptional, IsUrl } from 'class-validator';
+import { Album } from '../../albums/entities/album.entity';
 import { Member } from '../../members/entities/member.entity';
 
 export class CreateBandDto {
+  @IsString()
   readonly name: string;
+
+  @IsString()
   readonly genre: string;
+
+  @IsInt()
   readonly yearFormed: number;
-  readonly members: Member[];
-  readonly albums: Album[];
+
+  @IsString()
+  readonly country: string;
+
+  @IsBoolean()
+  readonly active: boolean;
+
+  @IsUrl()
+  readonly website: string;
+
+  @IsArray()
+  @IsOptional()
+  readonly members?: Member[];
+
+  @IsArray()
+  @IsOptional()
+  readonly albums?: Album[];
 }
