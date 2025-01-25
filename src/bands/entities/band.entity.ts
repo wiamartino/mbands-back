@@ -1,5 +1,6 @@
 import { Album } from '../../albums/entities/album.entity';
 import { Member } from '../../members/entities/member.entity';
+import { Event } from '../../events/entities/event.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
@@ -26,6 +27,9 @@ export class Band {
 
   @OneToMany(() => Album, (album) => album.band, { cascade: true })
   albums: Album[];
+
+  @OneToMany(() => Event, (event) => event.band, { cascade: true })
+  events: Event[];
 
   @Column()
   website: string;

@@ -1,6 +1,14 @@
-import { IsString, IsInt, IsBoolean, IsArray, IsOptional, IsUrl } from 'class-validator';
+import {
+  IsString,
+  IsInt,
+  IsBoolean,
+  IsArray,
+  IsOptional,
+  IsUrl,
+} from 'class-validator';
 import { Album } from '../../albums/entities/album.entity';
 import { Member } from '../../members/entities/member.entity';
+import { Event } from '../../events/entities/event.entity';
 
 export class CreateBandDto {
   @IsString()
@@ -28,4 +36,8 @@ export class CreateBandDto {
   @IsArray()
   @IsOptional()
   readonly albums?: Album[];
+
+  @IsArray()
+  @IsOptional()
+  readonly events?: Event[];
 }
