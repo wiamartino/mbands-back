@@ -14,6 +14,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
+import { EventsModule } from './events/events.module';
+import { Event } from './events/entities/event.entity';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { UsersModule } from './users/users.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Band, Member, Album, Song, User],
+      entities: [Band, Member, Album, Song, User, Event],
       synchronize: true,
     }),
     TypeOrmModule.forFeature(),
@@ -34,7 +36,8 @@ import { UsersModule } from './users/users.module';
     AlbumsModule,
     SongsModule,
     AuthModule,
-    UsersModule
+    UsersModule,
+    EventsModule
   ],
   controllers: [AppController],
   providers: [AppService],
