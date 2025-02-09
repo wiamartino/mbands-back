@@ -66,6 +66,9 @@ export class BandsController {
 
   @Get('year/:year')
   async findByYear(@Param('year') year: number) {
+    if (!year || isNaN(year)) {
+      throw new NotFoundException('Year parameter is missing or invalid');
+    }
     return this.bandsService.findByYear(+year);
   }
 
