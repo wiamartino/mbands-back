@@ -16,6 +16,7 @@ import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { EventsModule } from './events/events.module';
 import { Event } from './events/entities/event.entity';
+import {Role } from './users/entities/role.entity';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { Event } from './events/entities/event.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Band, Member, Album, Song, User, Event],
+      entities: [Band, Member, Album, Song, User, Event, Role],
       synchronize: true,
     }),
     TypeOrmModule.forFeature(),
