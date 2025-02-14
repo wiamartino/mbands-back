@@ -28,7 +28,10 @@ async function seed() {
   const song = songRepo.create({ title: 'Seed Song', band });
   await songRepo.save(song);
 
-  const user = userRepo.create({ username: 'seeduser', password: 'hashedpassword', email: 'seed@example.com' });
+  const role = roleRepo.create({ name: 'Admin' });
+  await roleRepo.save(role);
+
+  const user = userRepo.create({ username: 'seeduser', password: 'hashedpassword', email: 'seed@example.com', roles: [role] });
   await userRepo.save(user);
 
   console.log('Database seeded successfully');
