@@ -7,7 +7,7 @@ export class UsersService {
   constructor(private usersRepository: UsersRepository) {}
 
   async findOne(username: string): Promise<User | undefined> {
-    return this.usersRepository.findOne({ where: { username } });
+    return this.usersRepository.findOne({ where: { username }, relations: ['roles'] });
   }
 
   async create(user: User): Promise<User> {

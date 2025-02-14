@@ -7,6 +7,7 @@ import { Member } from '../members/entities/member.entity';
 import { Album } from '../albums/entities/album.entity';
 import { Song } from '../songs/entities/song.entity';
 import { User } from '../users/entities/user.entity';
+import { Role } from '../users/entities/role.entity';
 
 async function seed() {
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,7 @@ async function seed() {
   const albumRepo = app.get<Repository<Album>>(getRepositoryToken(Album));
   const songRepo = app.get<Repository<Song>>(getRepositoryToken(Song));
   const userRepo = app.get<Repository<User>>(getRepositoryToken(User));
+  const roleRepo = app.get<Repository<Role>>(getRepositoryToken(Role));
 
   const band = bandRepo.create({ name: 'Seed Band', genre: 'Rock', yearFormed: 2021, country: 'USA', active: true, website: 'http://example.com' });
   await bandRepo.save(band);
