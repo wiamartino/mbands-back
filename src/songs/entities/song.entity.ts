@@ -6,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   ManyToMany,
+  JoinColumn,
+  JoinTable,
 } from 'typeorm';
 
 @Entity()
@@ -16,9 +18,24 @@ export class Song {
   @Column()
   title: string;
 
-  @ManyToOne(() => Band)
+  @ManyToOne(() => Band, (band) => band.songs, { 
+    onDelete: 'CASCADE',
+    nullable: false 
+  })
+  @JoinColumn({ name: 'band_id' })
   band: Band;
 
-  @ManyToMany(() => Album)
+  @ManyToMany(() => Album, (album) => album.songs)
+  @JoinTable({
+    name: 'song_albums',
+    joinColumn: {
+      name: 'song_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'album_id',
+      referencedColumnName: 'id',
+    },
+  })
   albums: Album[];
 }
