@@ -3,7 +3,30 @@
     "name": "All Entities Collection",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
   "item": [
+    {
+      "name": "Root",
+      "item": [
+        {
+          "name": "Get Hello",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            }
+          }
+        }
+      ]
+    },
     {
       "name": "Auth",
       "item": [
@@ -53,11 +76,12 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Band Name\",\n  \"genre\": \"Rock\",\n  \"yearFormed\": 2000,\n  \"country\": \"USA\",\n  \"active\": true,\n  \"website\": \"http://bandwebsite.com\"\n}"
+              "raw": "{\n  \"name\": \"Band Name\",\n  \"genre\": \"Rock\",\n  \"yearFormed\": 2000,\n  \"country\": \"USA\",\n  \"active\": true,\n  \"website\": \"http://bandwebsite.com\",\n  \"description\": \"Band description\",\n  \"imageUrl\": \"http://imageurl.com/image.jpg\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/bands",
@@ -70,6 +94,9 @@
           "name": "Get All Bands",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/bands",
               "host": ["{{baseUrl}}"],
@@ -85,6 +112,9 @@
           "name": "Get Band by ID",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/bands/:id",
               "host": ["{{baseUrl}}"],
@@ -97,7 +127,8 @@
           "request": {
             "method": "PATCH",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
@@ -114,10 +145,83 @@
           "name": "Delete Band",
           "request": {
             "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/bands/:id",
               "host": ["{{baseUrl}}"],
               "path": ["bands", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Search Bands by Name",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bands/search/:name",
+              "host": ["{{baseUrl}}"],
+              "path": ["bands", "search", ":name"]
+            }
+          }
+        },
+        {
+          "name": "Search Bands by First Letter",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bands/lists/:firstLetter",
+              "host": ["{{baseUrl}}"],
+              "path": ["bands", "lists", ":firstLetter"]
+            }
+          }
+        },
+        {
+          "name": "Find Bands by Genre",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bands/genre/:genre",
+              "host": ["{{baseUrl}}"],
+              "path": ["bands", "genre", ":genre"]
+            }
+          }
+        },
+        {
+          "name": "Find Bands by Year",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bands/year/:year",
+              "host": ["{{baseUrl}}"],
+              "path": ["bands", "year", ":year"]
+            }
+          }
+        },
+        {
+          "name": "Find Bands by Country",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/bands/country/:country",
+              "host": ["{{baseUrl}}"],
+              "path": ["bands", "country", ":country"]
             }
           }
         }
@@ -135,7 +239,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Member Name\",\n  \"instrument\": \"Guitar\",\n  \"band\": 1\n}"
+              "raw": "{\n  \"name\": \"Member Name\",\n  \"instrument\": \"Guitar\",\n  \"bandId\": 1,\n  \"joinDate\": \"2023-01-01\",\n  \"isActive\": true,\n  \"biography\": \"Member biography\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/members",
@@ -209,7 +313,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Album Name\",\n  \"releaseDate\": \"2023-01-01\",\n  \"genre\": \"Rock\",\n  \"band\": 1\n}"
+              "raw": "{\n  \"name\": \"Album Name\",\n  \"bandId\": 1,\n  \"releaseDate\": \"2023-01-01\",\n  \"genre\": \"Rock\",\n  \"label\": \"Record Label\",\n  \"producer\": \"Producer Name\",\n  \"website\": \"http://albumwebsite.com\",\n  \"description\": \"Album description\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/albums",
@@ -268,6 +372,17 @@
               "path": ["albums", ":id"]
             }
           }
+        },
+        {
+          "name": "Get Albums by Band ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/albums/band/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["albums", "band", ":id"]
+            }
+          }
         }
       ]
     },
@@ -283,7 +398,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Song Title\",\n  \"band\": 1\n}"
+              "raw": "{\n  \"title\": \"Song Title\",\n  \"bandId\": 1,\n  \"duration\": 240,\n  \"trackNumber\": 1,\n  \"lyrics\": \"Song lyrics here\",\n  \"videoUrl\": \"http://videourl.com\",\n  \"albumIds\": [1, 2]\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/songs",
@@ -340,6 +455,80 @@
               "raw": "{{baseUrl}}/songs/:id",
               "host": ["{{baseUrl}}"],
               "path": ["songs", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "item": [
+        {
+          "name": "Create Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Concert Event\",\n  \"description\": \"Concert description\",\n  \"date\": \"2024-12-31T20:00:00Z\",\n  \"bandId\": 1,\n  \"eventType\": \"Concert\",\n  \"venue\": \"Madison Square Garden\",\n  \"city\": \"New York\",\n  \"country\": \"USA\",\n  \"ticketPrice\": 75.50,\n  \"ticketUrl\": \"http://tickets.example.com\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/events",
+              "host": ["{{baseUrl}}"],
+              "path": ["events"]
+            }
+          }
+        },
+        {
+          "name": "Get All Events",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/events",
+              "host": ["{{baseUrl}}"],
+              "path": ["events"]
+            }
+          }
+        },
+        {
+          "name": "Get Event by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/events/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["events", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Update Event",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Event Title\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/events/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["events", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Event",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/events/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["events", ":id"]
             }
           }
         }
