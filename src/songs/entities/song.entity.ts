@@ -8,15 +8,41 @@ import {
   ManyToMany,
   JoinColumn,
   JoinTable,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  Index,
 } from 'typeorm';
 
 @Entity()
+@Index(['title'])
 export class Song {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 255 })
   title: string;
+
+  @Column({ type: 'int', nullable: true, comment: 'Duration in seconds' })
+  duration: number;
+
+  @Column({ type: 'int', nullable: true })
+  trackNumber: number;
+
+  @Column({ type: 'text', nullable: true })
+  lyrics: string;
+
+  @Column({ nullable: true, length: 500 })
+  videoUrl: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 
   @ManyToOne(() => Band, (band) => band.songs, { 
     onDelete: 'CASCADE',

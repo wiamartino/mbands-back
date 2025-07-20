@@ -2,42 +2,50 @@ import {
   IsString,
   IsInt,
   IsBoolean,
-  IsArray,
   IsOptional,
   IsUrl,
+  IsNotEmpty,
+  Length,
+  Min,
+  Max,
 } from 'class-validator';
-import { Album } from '../../albums/entities/album.entity';
-import { Member } from '../../members/entities/member.entity';
-import { Event } from '../../events/entities/event.entity';
 
 export class CreateBandDto {
   @IsString()
+  @IsNotEmpty()
+  @Length(1, 255)
   readonly name: string;
 
   @IsString()
+  @IsNotEmpty()
+  @Length(1, 100)
   readonly genre: string;
 
   @IsInt()
+  @Min(1900)
+  @Max(new Date().getFullYear())
   readonly yearFormed: number;
 
   @IsString()
+  @IsNotEmpty()
+  @Length(1, 100)
   readonly country: string;
 
   @IsBoolean()
-  readonly active: boolean;
+  @IsOptional()
+  readonly active?: boolean = true;
 
   @IsUrl()
-  readonly website: string;
-
-  @IsArray()
   @IsOptional()
-  readonly members?: Member[];
+  @Length(0, 500)
+  readonly website?: string;
 
-  @IsArray()
+  @IsString()
   @IsOptional()
-  readonly albums?: Album[];
+  readonly description?: string;
 
-  @IsArray()
+  @IsUrl()
   @IsOptional()
-  readonly events?: Event[];
+  @Length(0, 500)
+  readonly imageUrl?: string;
 }

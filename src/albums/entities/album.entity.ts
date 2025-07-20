@@ -7,35 +7,63 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  JoinColumn,
+  Index,
 } from 'typeorm';
 
 @Entity()
+@Index(['releaseDate'])
+@Index(['genre'])
 export class Album {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 255 })
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'date', nullable: true })
   releaseDate: Date;
 
-  @Column({ nullable: true })
+  @Column({ length: 100, nullable: true })
   genre: string;
 
-  @ManyToOne(() => Band, (band) => band.albums)
-  band: Band;
-
-  @Column({ nullable: true })
+  @Column({ length: 255, nullable: true })
   label: string;
 
-  @Column({ nullable: true })
+  @Column({ length: 255, nullable: true })
   producer: string;
 
-  @ManyToMany(() => Song)
-  @JoinTable()
-  songs: Song[];
-
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 500 })
   website: string;
+
+  @Column({ type: 'text', nullable: true })
+  description: string;
+
+  @Column({ nullable: true, length: 500 })
+  coverImageUrl: string;
+
+  @Column({ type: 'int', nullable: true })
+  totalTracks: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
+
+  @ManyToOne(() => Band, (band) => band.albums, {
+    onDelete: 'CASCADE',
+    nullable: false
+  })
+  @JoinColumn({ name: 'band_id' })
+  band: Band;
+
+  @ManyToMany(() => Song, (song) => song.albums)
+  songs: Song[];
 }
