@@ -41,8 +41,7 @@ describe('BandsController', () => {
         name: 'Rata Blanca',
         genre: 'Heavy metal',
         yearFormed: 1985,
-        members: [],
-        albums: []
+        country: 'Argentina'
       };
       (service.create as jest.Mock).mockResolvedValue({ id: 1, ...dto });
       expect(await controller.create(dto)).toEqual({ id: 1, ...dto });

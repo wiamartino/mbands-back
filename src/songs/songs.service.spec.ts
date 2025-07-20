@@ -39,8 +39,19 @@ describe('SongsService', () => {
   });
 
   it('should create a song', async () => {
-    const dto: CreateSongDto = { title: 'Test Title', artist: 'Test Artist' };
-    const songEntity = { id: 1, ...dto } as Song;
+    const dto: CreateSongDto = { title: 'Test Title', bandId: 1 };
+    const songEntity = { 
+      id: 1, 
+      title: dto.title,
+      duration: null,
+      trackNumber: null,
+      lyrics: null,
+      videoUrl: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      band: null,
+      albums: []
+    } as Song;
     repository.create.mockReturnValue(songEntity);
     repository.save.mockResolvedValue(songEntity);
 
@@ -51,7 +62,10 @@ describe('SongsService', () => {
   });
 
   it('should find all songs', async () => {
-    const songs = [{ id: 1 } as Song, { id: 2 } as Song];
+    const songs = [
+      { id: 1, title: 'Song 1', createdAt: new Date(), updatedAt: new Date(), band: null, albums: [] } as Song, 
+      { id: 2, title: 'Song 2', createdAt: new Date(), updatedAt: new Date(), band: null, albums: [] } as Song
+    ];
     repository.find.mockResolvedValue(songs);
 
     const result = await service.findAll();
@@ -60,7 +74,14 @@ describe('SongsService', () => {
   });
 
   it('should find a song by id', async () => {
-    const song = { id: 1 } as Song;
+    const song = { 
+      id: 1, 
+      title: 'Test Song',
+      createdAt: new Date(), 
+      updatedAt: new Date(), 
+      band: null, 
+      albums: [] 
+    } as Song;
     repository.findOne.mockResolvedValue(song);
 
     const result = await service.findOne(1);
