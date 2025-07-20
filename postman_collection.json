@@ -235,7 +235,8 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
@@ -252,6 +253,9 @@
           "name": "Get All Members",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/members",
               "host": ["{{baseUrl}}"],
@@ -263,6 +267,9 @@
           "name": "Get Member by ID",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/members/:id",
               "host": ["{{baseUrl}}"],
@@ -275,7 +282,8 @@
           "request": {
             "method": "PATCH",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
@@ -292,6 +300,9 @@
           "name": "Delete Member",
           "request": {
             "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/members/:id",
               "host": ["{{baseUrl}}"],
@@ -309,7 +320,8 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
@@ -326,6 +338,9 @@
           "name": "Get All Albums",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/albums",
               "host": ["{{baseUrl}}"],
@@ -337,6 +352,9 @@
           "name": "Get Album by ID",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/albums/:id",
               "host": ["{{baseUrl}}"],
@@ -349,7 +367,8 @@
           "request": {
             "method": "PATCH",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
@@ -366,6 +385,9 @@
           "name": "Delete Album",
           "request": {
             "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/albums/:id",
               "host": ["{{baseUrl}}"],
@@ -377,6 +399,9 @@
           "name": "Get Albums by Band ID",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/albums/band/:id",
               "host": ["{{baseUrl}}"],
@@ -394,7 +419,8 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
@@ -411,6 +437,9 @@
           "name": "Get All Songs",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/songs",
               "host": ["{{baseUrl}}"],
@@ -422,6 +451,9 @@
           "name": "Get Song by ID",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/songs/:id",
               "host": ["{{baseUrl}}"],
@@ -434,7 +466,8 @@
           "request": {
             "method": "PATCH",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
@@ -451,6 +484,9 @@
           "name": "Delete Song",
           "request": {
             "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/songs/:id",
               "host": ["{{baseUrl}}"],
@@ -468,7 +504,8 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
@@ -485,6 +522,9 @@
           "name": "Get All Events",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/events",
               "host": ["{{baseUrl}}"],
@@ -496,6 +536,9 @@
           "name": "Get Event by ID",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/events/:id",
               "host": ["{{baseUrl}}"],
@@ -508,7 +551,8 @@
           "request": {
             "method": "PATCH",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "body": {
               "mode": "raw",
@@ -525,6 +569,9 @@
           "name": "Delete Event",
           "request": {
             "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/events/:id",
               "host": ["{{baseUrl}}"],
@@ -541,6 +588,9 @@
           "name": "Get User by Username",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
             "url": {
               "raw": "{{baseUrl}}/users/:username",
               "host": ["{{baseUrl}}"],
