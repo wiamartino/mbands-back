@@ -29,7 +29,7 @@ import {Role } from './users/entities/role.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [Band, Member, Album, Song, User, Event, Role],
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production',
     }),
     TypeOrmModule.forFeature(),
     BandsModule,
