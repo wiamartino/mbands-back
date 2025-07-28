@@ -9,6 +9,7 @@ import { Song } from './songs/entities/song.entity';
 import { User } from './users/entities/user.entity';
 import { Role } from './users/entities/role.entity';
 import { Event } from './events/entities/event.entity';
+import { Country } from './countries/entities/country.entity';
 
 config();
 
@@ -21,7 +22,7 @@ export default new DataSource({
   username: configService.get('DB_USERNAME') || 'postgres',
   password: configService.get('DB_PASSWORD') || 'password',
   database: configService.get('DB_NAME') || 'mbands',
-  entities: [Band, Member, Album, Song, User, Role, Event],
+  entities: [Band, Member, Album, Song, User, Role, Event, Country],
   migrations: ['src/migrations/**/*{.ts,.js}'],
   synchronize: false, // Set to false for production
   logging: true,

@@ -3,6 +3,7 @@ import { CreateBandDto } from './dto/create-band.dto';
 import { UpdateBandDto } from './dto/update-band.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Band } from './entities/band.entity';
+import { Country } from '../countries/entities/country.entity';
 import { DeleteResult, Repository } from 'typeorm';
 
 @Injectable()
@@ -10,10 +11,23 @@ export class BandsService {
   constructor(
     @InjectRepository(Band)
     private readonly bandsRepository: Repository<Band>,
+    @InjectRepository(Country)
+    private readonly countriesRepository: Repository<Country>,
   ) {}
 
   async create(createBandDto: CreateBandDto): Promise<Band> {
-    const band = this.bandsRepository.create(createBandDto);
+    const country = await this.countriesRepository.findOne({
+      where: { id: createBandDto.countryId }
+    });
+    
+    if (!country) {
+      throw new Error(`Country with ID ${createBandDto.countryId} not found`);
+    }
+
+    const band = this.bandsRepository.create({
+      ...createBandDto,
+      country,
+    });
     return this.bandsRepository.save(band);
   }
 
@@ -69,10 +83,14 @@ export class BandsService {
     });
   }
 
-  async findByCountry(country: string): Promise<Band[]> {
+  async findByCountry(countryName: string): Promise<Band[]> {
     return this.bandsRepository.find({
-      where: { country },
-      relations: ['members', 'albums'],
+      where: { 
+        country: { 
+          name: countryName 
+        } 
+      },
+      relations: ['members', 'albums', 'country'],
     });
   }
 }

@@ -9,6 +9,7 @@ import { Song } from '../songs/entities/song.entity';
 import { User } from '../users/entities/user.entity';
 import { Role } from '../users/entities/role.entity';
 import { Event } from '../events/entities/event.entity';
+import { Country } from '../countries/entities/country.entity';
 import * as bcrypt from 'bcrypt';
 
 async function seed() {
@@ -20,6 +21,7 @@ async function seed() {
   const userRepo = app.get<Repository<User>>(getRepositoryToken(User));
   const roleRepo = app.get<Repository<Role>>(getRepositoryToken(Role));
   const eventRepo = app.get<Repository<Event>>(getRepositoryToken(Event));
+  const countryRepo = app.get<Repository<Country>>(getRepositoryToken(Country));
 
   console.log('Starting database seeding...');
 
@@ -36,12 +38,75 @@ async function seed() {
   });
   await roleRepo.save(userRole);
 
+  // Create countries
+  console.log('Creating countries...');
+  const usa = countryRepo.create({
+    name: 'United States',
+    code: 'USA',
+    alpha2Code: 'US',
+    numericCode: 840,
+    region: 'Americas',
+    subregion: 'Northern America'
+  });
+  await countryRepo.save(usa);
+
+  const uk = countryRepo.create({
+    name: 'United Kingdom',
+    code: 'GBR',
+    alpha2Code: 'GB',
+    numericCode: 826,
+    region: 'Europe',
+    subregion: 'Northern Europe'
+  });
+  await countryRepo.save(uk);
+
+  const germany = countryRepo.create({
+    name: 'Germany',
+    code: 'DEU',
+    alpha2Code: 'DE',
+    numericCode: 276,
+    region: 'Europe',
+    subregion: 'Western Europe'
+  });
+  await countryRepo.save(germany);
+
+  const canada = countryRepo.create({
+    name: 'Canada',
+    code: 'CAN',
+    alpha2Code: 'CA',
+    numericCode: 124,
+    region: 'Americas',
+    subregion: 'Northern America'
+  });
+  await countryRepo.save(canada);
+
+  const sweden = countryRepo.create({
+    name: 'Sweden',
+    code: 'SWE',
+    alpha2Code: 'SE',
+    numericCode: 752,
+    region: 'Europe',
+    subregion: 'Northern Europe'
+  });
+  await countryRepo.save(sweden);
+
+  const australia = countryRepo.create({
+    name: 'Australia',
+    code: 'AUS',
+    alpha2Code: 'AU',
+    numericCode: 36,
+    region: 'Oceania',
+    subregion: 'Australia and New Zealand'
+  });
+  await countryRepo.save(australia);
+
   // Create bands with enhanced data
+  console.log('Creating bands...');
   const metallica = bandRepo.create({ 
     name: 'Metallica', 
     genre: 'Heavy Metal', 
     yearFormed: 1981, 
-    country: 'USA', 
+    country: usa, 
     active: true, 
     website: 'https://www.metallica.com',
     description: 'American heavy metal band formed in Los Angeles.',
@@ -53,13 +118,49 @@ async function seed() {
     name: 'Pink Floyd', 
     genre: 'Progressive Rock', 
     yearFormed: 1965, 
-    country: 'UK', 
+    country: uk, 
     active: false, 
     website: 'https://www.pinkfloyd.com',
     description: 'English rock band formed in London.',
     imageUrl: 'https://example.com/pinkfloyd.jpg'
   });
   await bandRepo.save(pinkFloyd);
+
+  const abba = bandRepo.create({
+    name: 'ABBA',
+    genre: 'Pop',
+    yearFormed: 1972,
+    country: sweden,
+    active: false,
+    website: 'https://www.abbasite.com',
+    description: 'Swedish pop supergroup formed in Stockholm.',
+    imageUrl: 'https://example.com/abba.jpg'
+  });
+  await bandRepo.save(abba);
+
+  const acdc = bandRepo.create({
+    name: 'AC/DC',
+    genre: 'Hard Rock',
+    yearFormed: 1973,
+    country: australia,
+    active: true,
+    website: 'https://www.acdc.com',
+    description: 'Australian rock band formed in Sydney.',
+    imageUrl: 'https://example.com/acdc.jpg'
+  });
+  await bandRepo.save(acdc);
+
+  const rush = bandRepo.create({
+    name: 'Rush',
+    genre: 'Progressive Rock',
+    yearFormed: 1968,
+    country: canada,
+    active: false,
+    website: 'https://www.rush.com',
+    description: 'Canadian rock band formed in Toronto.',
+    imageUrl: 'https://example.com/rush.jpg'
+  });
+  await bandRepo.save(rush);
 
   // Create members with enhanced data
   const jamesHetfield = memberRepo.create({ 
@@ -92,6 +193,38 @@ async function seed() {
     biography: 'English guitarist, singer, and songwriter, best known as a member of Pink Floyd.'
   });
   await memberRepo.save(davidGilmour);
+
+  const bjornUlvaeus = memberRepo.create({
+    name: 'Björn Ulvaeus',
+    instrument: 'Guitar',
+    band: abba,
+    joinDate: new Date('1972-01-01'),
+    leaveDate: new Date('1982-12-11'),
+    isActive: false,
+    biography: 'Swedish songwriter, composer, musician, writer, and producer.'
+  });
+  await memberRepo.save(bjornUlvaeus);
+
+  const angusYoung = memberRepo.create({
+    name: 'Angus Young',
+    instrument: 'Guitar',
+    band: acdc,
+    joinDate: new Date('1973-12-01'),
+    isActive: true,
+    biography: 'Scottish-Australian guitarist and co-founder of AC/DC.'
+  });
+  await memberRepo.save(angusYoung);
+
+  const geddyLee = memberRepo.create({
+    name: 'Geddy Lee',
+    instrument: 'Vocals',
+    band: rush,
+    joinDate: new Date('1968-09-01'),
+    leaveDate: new Date('2018-01-01'),
+    isActive: false,
+    biography: 'Canadian musician, singer, and songwriter, best known as the lead vocalist, bassist, and keyboardist for Rush.'
+  });
+  await memberRepo.save(geddyLee);
 
   // Create albums with enhanced data
   const masterOfPuppets = albumRepo.create({ 
@@ -157,7 +290,7 @@ async function seed() {
     eventType: 'Concert',
     venue: 'Madison Square Garden',
     city: 'New York',
-    country: 'USA',
+    country: usa,
     ticketPrice: 150.00,
     ticketUrl: 'https://tickets.example.com/metallica',
     isActive: true

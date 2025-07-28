@@ -43,10 +43,10 @@ export class CreateEventDto {
   @Length(1, 100)
   readonly city?: string;
 
-  @IsString()
+  @IsInt()
   @IsOptional()
-  @Length(1, 100)
-  readonly country?: string;
+  @IsPositive()
+  readonly countryId?: number;
 
   @IsDecimal({ decimal_digits: '0,2' })
   @IsOptional()

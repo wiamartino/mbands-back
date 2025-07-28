@@ -2,11 +2,14 @@ import { Album } from '../../albums/entities/album.entity';
 import { Member } from '../../members/entities/member.entity';
 import { Event } from '../../events/entities/event.entity';
 import { Song } from '../../songs/entities/song.entity';
+import { Country } from '../../countries/entities/country.entity';
 import { 
   Entity, 
   PrimaryGeneratedColumn, 
   Column, 
   OneToMany, 
+  ManyToOne,
+  JoinColumn,
   CreateDateColumn, 
   UpdateDateColumn, 
   DeleteDateColumn,
@@ -14,7 +17,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-@Index(['genre', 'country'])
+@Index(['genre'])
 @Index(['yearFormed'])
 @Index(['active'])
 export class Band {
@@ -29,9 +32,6 @@ export class Band {
 
   @Column({ type: 'int', comment: 'Year the band was formed (must be between 1900 and current year)' })
   yearFormed: number;
-
-  @Column({ length: 100 })
-  country: string;
 
   @Column({ default: true })
   active: boolean;
@@ -53,6 +53,13 @@ export class Band {
 
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  @ManyToOne(() => Country, (country) => country.bands, { 
+    onDelete: 'CASCADE',
+    nullable: false 
+  })
+  @JoinColumn({ name: 'country_id' })
+  country: Country;
 
   @OneToMany(() => Member, (member) => member.band, { cascade: true })
   members: Member[];

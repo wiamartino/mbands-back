@@ -10,6 +10,7 @@ import {
   Index
 } from 'typeorm';
 import { Band } from '../../bands/entities/band.entity';
+import { Country } from '../../countries/entities/country.entity';
 
 @Entity()
 @Index(['date'])
@@ -40,9 +41,6 @@ export class Event {
   @Column({ length: 100, nullable: true })
   city: string;
 
-  @Column({ length: 100, nullable: true })
-  country: string;
-
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   ticketPrice: number;
 
@@ -67,4 +65,11 @@ export class Event {
   })
   @JoinColumn({ name: 'band_id' })
   band: Band;
+
+  @ManyToOne(() => Country, (country) => country.events, {
+    onDelete: 'CASCADE',
+    nullable: true
+  })
+  @JoinColumn({ name: 'country_id' })
+  country: Country;
 }

@@ -8,6 +8,7 @@ import {
   Length,
   Min,
   Max,
+  IsPositive,
 } from 'class-validator';
 
 export class CreateBandDto {
@@ -26,10 +27,9 @@ export class CreateBandDto {
   @Max(new Date().getFullYear())
   readonly yearFormed: number;
 
-  @IsString()
-  @IsNotEmpty()
-  @Length(1, 100)
-  readonly country: string;
+  @IsInt()
+  @IsPositive()
+  readonly countryId: number;
 
   @IsBoolean()
   @IsOptional()

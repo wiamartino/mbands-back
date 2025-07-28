@@ -17,6 +17,8 @@ import { UsersModule } from './users/users.module';
 import { EventsModule } from './events/events.module';
 import { Event } from './events/entities/event.entity';
 import {Role } from './users/entities/role.entity';
+import { CountriesModule } from './countries/countries.module';
+import { Country } from './countries/entities/country.entity';
 
 @Module({
   imports: [
@@ -28,7 +30,7 @@ import {Role } from './users/entities/role.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Band, Member, Album, Song, User, Event, Role],
+      entities: [Band, Member, Album, Song, User, Event, Role, Country],
       synchronize: process.env.NODE_ENV !== 'production',
     }),
     TypeOrmModule.forFeature(),
@@ -38,7 +40,8 @@ import {Role } from './users/entities/role.entity';
     SongsModule,
     AuthModule,
     UsersModule,
-    EventsModule
+    EventsModule,
+    CountriesModule
   ],
   controllers: [AppController],
   providers: [AppService],
