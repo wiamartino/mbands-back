@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 import * as bcrypt from 'bcrypt';
@@ -8,12 +8,13 @@ import { User } from 'src/users/entities/user.entity';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
+//  @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req) {
-
-    // const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const validatedUser = await this.authService.validateUser(req.body.username, req.body.password);
+    if (!validatedUser) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
     return this.authService.login(validatedUser);
   }
   
