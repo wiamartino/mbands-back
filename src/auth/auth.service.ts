@@ -1,12 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, ConflictException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User } from 'src/users/entities/user.entity';
-import { UsersService } from 'src/users/users.service';
-const jwt = require('jsonwebtoken');
+import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
+import { RegisterDto, AuthResponseDto, UserResponseDto } from './dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async validateUser(username: string, password: string) {
     const user = await this.userService.findOne(username);
@@ -31,40 +35,57 @@ export class AuthService {
     return user;
   }
 
-  async login(user: User) {
-    const payload = { sub: user.userId, username: user.username, password: user.password ,email: user.email };
+  async login(user: User): Promise<AuthResponseDto> {
+    const payload = { 
+      sub: user.userId, 
+      username: user.username, 
+      email: user.email 
+    };
+    
+    const userResponse: UserResponseDto = {
+      id: user.userId.toString(),
+      username: user.username,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      isActive: user.isActive,
+      createdAt: user.createdAt,
+    };
+
     return {
       access_token: this.generateToken(payload),
+      user: userResponse,
     };
   }
 
-  async register(username: string, password: string, email: string) {
+  async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
+    const { username, password, email, firstName, lastName } = registerDto;
+    
     const existingUser = await this.userService.findOne(username);
     if (existingUser) {
-      throw new BadRequestException('User already exists');
+      throw new ConflictException('Username already exists');
     }
+
+    const existingEmail = await this.userService.findByEmail(email);
+    if (existingEmail) {
+      throw new ConflictException('Email already exists');
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser: User = { 
-      userId: 0, 
+    const newUser: Partial<User> = { 
       username, 
       password: hashedPassword, 
       email, 
-      roles: [],
-      firstName: null,
-      lastName: null,
+      firstName: firstName || null,
+      lastName: lastName || null,
       isActive: true,
-      lastLoginAt: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      deletedAt: null
     };
-    const user = await this.userService.create(newUser);
-    // await this.userService.save(user);
+    
+    const user = await this.userService.create(newUser as User);
     return this.login(user);
   }
 
-  private generateToken(payload: any) {
-    const secretKey = process.env.JWT_SECRET; 
-    return jwt.sign(payload, secretKey, { expiresIn: '1d' });
+  private generateToken(payload: any): string {
+    return this.jwtService.sign(payload);
   }
 }
