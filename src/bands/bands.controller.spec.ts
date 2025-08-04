@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
 import { BandsController } from './bands.controller';
 import { BandsService } from './bands.service';
 import { CreateBandDto } from './dto/create-band.dto';
@@ -22,6 +23,9 @@ describe('BandsController', () => {
             remove: jest.fn(),
             searchByName: jest.fn(),
             searchByFirstLetter: jest.fn(),
+            findByGenre: jest.fn(),
+            findByYear: jest.fn(),
+            findByCountry: jest.fn(),
           },
         },
       ],
@@ -41,7 +45,7 @@ describe('BandsController', () => {
         name: 'Rata Blanca',
         genre: 'Heavy metal',
         yearFormed: 1985,
-        country: 'Argentina'
+        countryId: 1
       };
       (service.create as jest.Mock).mockResolvedValue({ id: 1, ...dto });
       expect(await controller.create(dto)).toEqual({ id: 1, ...dto });
@@ -66,7 +70,7 @@ describe('BandsController', () => {
 
     it('should throw NotFoundException if not found', async () => {
       (service.findOne as jest.Mock).mockResolvedValue(null);
-      await expect(controller.findOne('1')).rejects.toThrow();
+      await expect(controller.findOne('1')).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -100,6 +104,34 @@ describe('BandsController', () => {
       (service.searchByFirstLetter as jest.Mock).mockResolvedValue([{ id: 3 }]);
       expect(await controller.searchByFirstLetter('b')).toEqual([{ id: 3 }]);
       expect(service.searchByFirstLetter).toHaveBeenCalledWith('b');
+    });
+  });
+
+  describe('findByGenre', () => {
+    it('should call service.findByGenre with the provided genre', async () => {
+      (service.findByGenre as jest.Mock).mockResolvedValue([{ id: 4, genre: 'Metal' }]);
+      expect(await controller.findByGenre('Metal')).toEqual([{ id: 4, genre: 'Metal' }]);
+      expect(service.findByGenre).toHaveBeenCalledWith('Metal');
+    });
+  });
+
+  describe('findByYear', () => {
+    it('should call service.findByYear with the provided year', async () => {
+      (service.findByYear as jest.Mock).mockResolvedValue([{ id: 5, yearFormed: 1985 }]);
+      expect(await controller.findByYear(1985)).toEqual([{ id: 5, yearFormed: 1985 }]);
+      expect(service.findByYear).toHaveBeenCalledWith(1985);
+    });
+
+    it('should throw NotFoundException for invalid year', async () => {
+      await expect(controller.findByYear(NaN)).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('findByCountry', () => {
+    it('should call service.findByCountry with the provided country', async () => {
+      (service.findByCountry as jest.Mock).mockResolvedValue([{ id: 6, country: 'Argentina' }]);
+      expect(await controller.findByCountry('Argentina')).toEqual([{ id: 6, country: 'Argentina' }]);
+      expect(service.findByCountry).toHaveBeenCalledWith('Argentina');
     });
   });
 });
