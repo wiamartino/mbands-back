@@ -78,7 +78,7 @@ export class AuthController {
   })
   @ApiBody({ type: RegisterDto })
   @HttpCode(HttpStatus.CREATED)
-  @Throttle({ default: { limit: 3, ttl: 60000 } }) // 3 requests per minute
+  @Throttle({ default: { limit: 10, ttl: 60000 } }) // 10 requests per minute
   @Post('register')
   async register(@Body() registerDto: RegisterDto): Promise<AuthResponseDto> {
     try {

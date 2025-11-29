@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy';
 import { JwtModule } from '@nestjs/jwt';
@@ -11,11 +12,16 @@ import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
+    ConfigModule,
     UsersModule,
     PassportModule,
-    JwtModule.register({
-      secret: `${process.env.JWT_SECRET}`,
-      signOptions: { expiresIn: '60m' },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '60m' },
+      }),
+      inject: [ConfigService],
     }),
     ThrottlerModule.forRoot([{
       ttl: 60000, // 1 minute
