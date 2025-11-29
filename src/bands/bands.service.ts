@@ -35,14 +35,30 @@ export class BandsService {
     return this.bandsRepository.find({
       skip: (page - 1) * limit,
       take: limit,
-      relations: ['members', 'albums'],
+      relations: {
+        country: true,
+        members: true,
+        albums: {
+          songs: true,
+        },
+        events: true,
+        songs: true,
+      },
     });
   }
 
   async findOne(id: number): Promise<Band> {
     return this.bandsRepository.findOne({
       where: { id },
-      relations: ['members', 'albums'],
+      relations: {
+        country: true,
+        members: true,
+        albums: {
+          songs: true,
+        },
+        events: true,
+        songs: true,
+      },
     });
   }
 

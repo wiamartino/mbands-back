@@ -21,7 +21,15 @@ export class CountriesService {
     return this.countriesRepository.find({
       skip: (page - 1) * limit,
       take: limit,
-      relations: ['bands', 'events'],
+      relations: {
+        bands: {
+          albums: true,
+          members: true,
+        },
+        events: {
+          band: true,
+        },
+      },
       where: { isActive: true },
     });
   }
@@ -29,7 +37,15 @@ export class CountriesService {
   async findOne(id: number): Promise<Country> {
     const country = await this.countriesRepository.findOne({
       where: { id, isActive: true },
-      relations: ['bands', 'events'],
+      relations: {
+        bands: {
+          albums: true,
+          members: true,
+        },
+        events: {
+          band: true,
+        },
+      },
     });
     
     if (!country) {
@@ -42,7 +58,15 @@ export class CountriesService {
   async findByCode(code: string): Promise<Country> {
     const country = await this.countriesRepository.findOne({
       where: { code: code.toUpperCase(), isActive: true },
-      relations: ['bands', 'events'],
+      relations: {
+        bands: {
+          albums: true,
+          members: true,
+        },
+        events: {
+          band: true,
+        },
+      },
     });
     
     if (!country) {

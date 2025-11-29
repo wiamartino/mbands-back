@@ -18,15 +18,36 @@ export class AlbumsService {
   }
 
   async findAll(): Promise<Album[]> {
-    return this.albumsRepository.find();
+    return this.albumsRepository.find({
+      relations: {
+        band: true,
+        songs: true,
+      },
+    });
   }
 
   async findOne(id: number): Promise<Album> {
-    return this.albumsRepository.findOne({ where: { id } });
+    return this.albumsRepository.findOne({
+      where: { id },
+      relations: {
+        band: {
+          country: true,
+        },
+        songs: {
+          band: true,
+        },
+      },
+    });
   }
 
   async findByBandId(bandId: number): Promise<Album[]> {
-    return this.albumsRepository.find({ where: { band: { id: bandId } } });
+    return this.albumsRepository.find({
+      where: { band: { id: bandId } },
+      relations: {
+        band: true,
+        songs: true,
+      },
+    });
   }
 
   async update(id: number, updateAlbumDto: UpdateAlbumDto) {

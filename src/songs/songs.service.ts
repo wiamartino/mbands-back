@@ -17,11 +17,30 @@ export class SongsService {
   }
 
   findAll() {
-    return this.songsRepository.find();
+    return this.songsRepository.find({
+      relations: {
+        band: {
+          country: true,
+        },
+        albums: {
+          band: true,
+        },
+      },
+    });
   }
 
   findOne(id: number) {
-    return this.songsRepository.findOne({ where: { id } });
+    return this.songsRepository.findOne({
+      where: { id },
+      relations: {
+        band: {
+          country: true,
+        },
+        albums: {
+          band: true,
+        },
+      },
+    });
   }
 
   update(id: number, updateSongDto: UpdateSongDto) {

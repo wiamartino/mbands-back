@@ -17,12 +17,25 @@ export class MembersService {
   }
 
   async findAll() {
-    return this.membersRepository.find();
+    return this.membersRepository.find({
+      relations: {
+        band: {
+          country: true,
+          albums: true,
+        },
+      },
+    });
   }
 
   async findOne(id: number) {
     return this.membersRepository.findOne({
       where: { id },
+      relations: {
+        band: {
+          country: true,
+          albums: true,
+        },
+      },
     });
   }
 
