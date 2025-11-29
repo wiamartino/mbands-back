@@ -54,7 +54,17 @@ describe('AlbumsService', () => {
   it('findOne() should call repository findOne', async () => {
     mockAlbumsRepository.findOne.mockResolvedValue({ id: 1 });
     const result = await service.findOne(1);
-    expect(mockAlbumsRepository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
+    expect(mockAlbumsRepository.findOne).toHaveBeenCalledWith({
+      where: { id: 1 },
+      relations: {
+        band: {
+          country: true,
+        },
+        songs: {
+          band: true,
+        },
+      },
+    });
     expect(result.id).toBe(1);
   });
 

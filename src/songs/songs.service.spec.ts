@@ -85,7 +85,17 @@ describe('SongsService', () => {
     repository.findOne.mockResolvedValue(song);
 
     const result = await service.findOne(1);
-    expect(repository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
+    expect(repository.findOne).toHaveBeenCalledWith({
+      where: { id: 1 },
+      relations: {
+        albums: {
+          band: true,
+        },
+        band: {
+          country: true,
+        },
+      },
+    });
     expect(result).toEqual(song);
   });
 

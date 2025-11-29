@@ -65,7 +65,15 @@ describe('CountriesService', () => {
       expect(await service.findOne(1)).toEqual(country);
       expect(repository.findOne).toHaveBeenCalledWith({
         where: { id: 1, isActive: true },
-        relations: ['bands', 'events'],
+        relations: {
+          bands: {
+            albums: true,
+            members: true,
+          },
+          events: {
+            band: true,
+          },
+        },
       });
     });
 
