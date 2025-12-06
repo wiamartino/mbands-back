@@ -4,7 +4,7 @@ import { UpdateBandDto } from './dto/update-band.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Band } from './entities/band.entity';
 import { Country } from '../countries/entities/country.entity';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class BandsService {
@@ -13,13 +13,13 @@ export class BandsService {
     private readonly bandsRepository: Repository<Band>,
     @InjectRepository(Country)
     private readonly countriesRepository: Repository<Country>,
-  ) {}
+  ) { }
 
   async create(createBandDto: CreateBandDto): Promise<Band> {
     const country = await this.countriesRepository.findOne({
       where: { id: createBandDto.countryId }
     });
-    
+
     if (!country) {
       throw new Error(`Country with ID ${createBandDto.countryId} not found`);
     }
@@ -67,8 +67,8 @@ export class BandsService {
     return this.findOne(id);
   }
 
-  async remove(id: number): Promise<DeleteResult> {
-    return this.bandsRepository.delete(id);
+  async remove(id: number): Promise<UpdateResult> {
+    return this.bandsRepository.softDelete(id);
   }
 
   async searchByName(name: string): Promise<Band[]> {
@@ -101,10 +101,10 @@ export class BandsService {
 
   async findByCountry(countryName: string): Promise<Band[]> {
     return this.bandsRepository.find({
-      where: { 
-        country: { 
-          name: countryName 
-        } 
+      where: {
+        country: {
+          name: countryName
+        }
       },
       relations: ['members', 'albums', 'country'],
     });

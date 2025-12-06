@@ -3,14 +3,14 @@ import { CreateCountryDto } from './dto/create-country.dto';
 import { UpdateCountryDto } from './dto/update-country.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Country } from './entities/country.entity';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class CountriesService {
   constructor(
     @InjectRepository(Country)
     private readonly countriesRepository: Repository<Country>,
-  ) {}
+  ) { }
 
   async create(createCountryDto: CreateCountryDto): Promise<Country> {
     const country = this.countriesRepository.create(createCountryDto);
@@ -47,11 +47,11 @@ export class CountriesService {
         },
       },
     });
-    
+
     if (!country) {
       throw new NotFoundException(`Country with ID ${id} not found`);
     }
-    
+
     return country;
   }
 
@@ -68,11 +68,11 @@ export class CountriesService {
         },
       },
     });
-    
+
     if (!country) {
       throw new NotFoundException(`Country with code ${code} not found`);
     }
-    
+
     return country;
   }
 
@@ -99,9 +99,9 @@ export class CountriesService {
     return this.findOne(id);
   }
 
-  async remove(id: number): Promise<DeleteResult> {
+  async remove(id: number): Promise<UpdateResult> {
     const country = await this.findOne(id);
-    return this.countriesRepository.delete(id);
+    return this.countriesRepository.softDelete(id);
   }
 
   async softRemove(id: number): Promise<Country> {

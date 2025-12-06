@@ -3,14 +3,14 @@ import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class MembersService {
   constructor(
     @InjectRepository(Member)
     private readonly membersRepository: Repository<Member>,
-  ) {}
+  ) { }
   async create(createMemberDto: CreateMemberDto) {
     const band = this.membersRepository.create(createMemberDto);
     return this.membersRepository.save(band);
@@ -44,7 +44,7 @@ export class MembersService {
     return this.findOne(id);
   }
 
-  async remove(id: number) {
-    return this.membersRepository.delete(id);
+  async remove(id: number): Promise<UpdateResult> {
+    return this.membersRepository.softDelete(id);
   }
 }

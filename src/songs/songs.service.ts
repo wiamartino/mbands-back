@@ -3,14 +3,14 @@ import { CreateSongDto } from './dto/create-song.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
 import { Song } from './entities/song.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class SongsService {
   constructor(
     @InjectRepository(Song)
     private readonly songsRepository: Repository<Song>,
-  ) {}
+  ) { }
   create(createSongDto: CreateSongDto) {
     const newSong = this.songsRepository.create(createSongDto);
     return this.songsRepository.save(newSong);
@@ -47,7 +47,7 @@ export class SongsService {
     return this.songsRepository.update(id, updateSongDto);
   }
 
-  async remove(id: number): Promise<void> {
-    await this.songsRepository.delete(id);
+  async remove(id: number): Promise<UpdateResult> {
+    return this.songsRepository.softDelete(id);
   }
 }
