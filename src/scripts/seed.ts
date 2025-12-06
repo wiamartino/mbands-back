@@ -63,7 +63,7 @@ async function seed() {
   // Retrieve countries needed for relationships
   const usa = await countryRepo.findOneByOrFail({ code: 'USA' });
   const uk = await countryRepo.findOneByOrFail({ code: 'GBR' });
-  const germany = await countryRepo.findOneByOrFail({ code: 'DEU' });
+
   const canada = await countryRepo.findOneByOrFail({ code: 'CAN' });
   const sweden = await countryRepo.findOneByOrFail({ code: 'SWE' });
   const australia = await countryRepo.findOneByOrFail({ code: 'AUS' });

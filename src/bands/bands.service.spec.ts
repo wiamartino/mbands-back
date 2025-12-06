@@ -9,8 +9,6 @@ import { UpdateBandDto } from './dto/update-band.dto';
 
 describe('BandsService', () => {
   let service: BandsService;
-  let bandsRepository: Repository<Band>;
-  let countriesRepository: Repository<Country>;
 
   const mockBandsRepository = {
     create: jest.fn(),
@@ -46,10 +44,7 @@ describe('BandsService', () => {
     }).compile();
 
     service = module.get<BandsService>(BandsService);
-    bandsRepository = module.get<Repository<Band>>(getRepositoryToken(Band));
-    countriesRepository = module.get<Repository<Country>>(
-      getRepositoryToken(Country),
-    );
+    module.get<Repository<Country>>(getRepositoryToken(Country));
   });
 
   afterEach(() => {

@@ -3,7 +3,7 @@ import { CreateCountryDto } from './dto/create-country.dto';
 import { UpdateCountryDto } from './dto/update-country.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Country } from './entities/country.entity';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class CountriesService {
@@ -97,13 +97,13 @@ export class CountriesService {
     id: number,
     updateCountryDto: UpdateCountryDto,
   ): Promise<Country> {
-    const country = await this.findOne(id);
+    await this.findOne(id);
     await this.countriesRepository.update(id, updateCountryDto);
     return this.findOne(id);
   }
 
   async remove(id: number): Promise<UpdateResult> {
-    const country = await this.findOne(id);
+    await this.findOne(id);
     return this.countriesRepository.softDelete(id);
   }
 

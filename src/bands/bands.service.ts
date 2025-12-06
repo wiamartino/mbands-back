@@ -4,7 +4,7 @@ import { UpdateBandDto } from './dto/update-band.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Band } from './entities/band.entity';
 import { Country } from '../countries/entities/country.entity';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class BandsService {

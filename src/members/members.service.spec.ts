@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+
 import { MembersService } from './members.service';
 import { Member } from './entities/member.entity';
 import { CreateMemberDto } from './dto/create-member.dto';
@@ -8,7 +8,6 @@ import { UpdateMemberDto } from './dto/update-member.dto';
 
 describe('MembersService', () => {
   let service: MembersService;
-  let repository: Repository<Member>;
 
   const mockRepository = {
     create: jest.fn(),
@@ -32,7 +31,6 @@ describe('MembersService', () => {
     }).compile();
 
     service = module.get<MembersService>(MembersService);
-    repository = module.get<Repository<Member>>(getRepositoryToken(Member));
   });
 
   afterEach(() => {

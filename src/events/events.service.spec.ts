@@ -2,13 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EventsService } from './events.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
-import { Repository } from 'typeorm';
+
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 
 describe('EventsService', () => {
   let service: EventsService;
-  let repository: Repository<Event>;
 
   const mockRepository = {
     create: jest.fn(),
@@ -32,7 +31,6 @@ describe('EventsService', () => {
     }).compile();
 
     service = module.get<EventsService>(EventsService);
-    repository = module.get<Repository<Event>>(getRepositoryToken(Event));
   });
 
   it('should be defined', () => {

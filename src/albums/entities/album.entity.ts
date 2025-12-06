@@ -7,7 +7,6 @@ import {
   Column,
   ManyToOne,
   ManyToMany,
-  JoinTable,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,

@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { AlbumsService } from './albums.service';
 import { Album } from './entities/album.entity';
-import { Repository } from 'typeorm';
 
 const mockAlbumsRepository = {
   create: jest.fn(),
