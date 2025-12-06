@@ -10,7 +10,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(username: string, password: string): Promise<any> {
-    // const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.authService.validateUser(username, password);
     if (!user) {
       throw new UnauthorizedException();
