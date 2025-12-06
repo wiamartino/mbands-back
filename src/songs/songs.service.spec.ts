@@ -18,6 +18,7 @@ describe('SongsService', () => {
       findOne: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
+      softDelete: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -40,8 +41,8 @@ describe('SongsService', () => {
 
   it('should create a song', async () => {
     const dto: CreateSongDto = { title: 'Test Title', bandId: 1 };
-    const songEntity = { 
-      id: 1, 
+    const songEntity = {
+      id: 1,
       title: dto.title,
       duration: null,
       trackNumber: null,
@@ -63,7 +64,7 @@ describe('SongsService', () => {
 
   it('should find all songs', async () => {
     const songs = [
-      { id: 1, title: 'Song 1', createdAt: new Date(), updatedAt: new Date(), band: null, albums: [] } as Song, 
+      { id: 1, title: 'Song 1', createdAt: new Date(), updatedAt: new Date(), band: null, albums: [] } as Song,
       { id: 2, title: 'Song 2', createdAt: new Date(), updatedAt: new Date(), band: null, albums: [] } as Song
     ];
     repository.find.mockResolvedValue(songs);
@@ -74,13 +75,13 @@ describe('SongsService', () => {
   });
 
   it('should find a song by id', async () => {
-    const song = { 
-      id: 1, 
+    const song = {
+      id: 1,
       title: 'Test Song',
-      createdAt: new Date(), 
-      updatedAt: new Date(), 
-      band: null, 
-      albums: [] 
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      band: null,
+      albums: []
     } as Song;
     repository.findOne.mockResolvedValue(song);
 
@@ -109,9 +110,9 @@ describe('SongsService', () => {
   });
 
   it('should remove a song', async () => {
-    repository.delete.mockResolvedValue({ affected: 1, raw: [] });
+    repository.softDelete.mockResolvedValue({ affected: 1, raw: [], generatedMaps: [] });
 
     await service.remove(1);
-    expect(repository.delete).toHaveBeenCalledWith(1);
+    expect(repository.softDelete).toHaveBeenCalledWith(1);
   });
 });

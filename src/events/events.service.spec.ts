@@ -17,6 +17,7 @@ describe('EventsService', () => {
     findOne: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    softDelete: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -40,8 +41,8 @@ describe('EventsService', () => {
 
   describe('create', () => {
     it('should create and save an event', async () => {
-      const createEventDto: CreateEventDto = { 
-        title: 'Test Event', 
+      const createEventDto: CreateEventDto = {
+        title: 'Test Event',
         description: 'Test Description',
         date: '2023-06-15T20:00:00.000Z',
         bandId: 1
@@ -101,11 +102,11 @@ describe('EventsService', () => {
 
   describe('remove', () => {
     it('should delete an event', async () => {
-      mockRepository.delete.mockResolvedValue({ affected: 1 });
+      mockRepository.softDelete.mockResolvedValue({ affected: 1 });
 
       await service.remove(1);
 
-      expect(mockRepository.delete).toHaveBeenCalledWith(1);
+      expect(mockRepository.softDelete).toHaveBeenCalledWith(1);
     });
   });
 });

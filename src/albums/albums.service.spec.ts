@@ -10,7 +10,8 @@ const mockAlbumsRepository = {
   find: jest.fn(),
   findOne: jest.fn(),
   update: jest.fn(),
-  delete: jest.fn()
+  delete: jest.fn(),
+  softDelete: jest.fn()
 };
 
 describe('AlbumsService', () => {
@@ -76,8 +77,8 @@ describe('AlbumsService', () => {
   });
 
   it('remove() should call repository delete', async () => {
-    mockAlbumsRepository.delete.mockResolvedValue({ affected: 1 });
+    mockAlbumsRepository.softDelete.mockResolvedValue({ affected: 1 });
     await service.remove(1);
-    expect(mockAlbumsRepository.delete).toHaveBeenCalledWith(1);
+    expect(mockAlbumsRepository.softDelete).toHaveBeenCalledWith(1);
   });
 });

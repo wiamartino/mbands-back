@@ -19,6 +19,7 @@ describe('BandsService', () => {
     findOne: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    softDelete: jest.fn(),
     createQueryBuilder: jest.fn(() => ({
       where: jest.fn().mockReturnThis(),
       getMany: jest.fn(),
@@ -164,11 +165,11 @@ describe('BandsService', () => {
   describe('remove', () => {
     it('should delete a band', async () => {
       const deleteResult: DeleteResult = { affected: 1, raw: {} };
-      mockBandsRepository.delete.mockResolvedValue(deleteResult);
+      mockBandsRepository.softDelete.mockResolvedValue(deleteResult);
 
       const result = await service.remove(1);
 
-      expect(mockBandsRepository.delete).toHaveBeenCalledWith(1);
+      expect(mockBandsRepository.softDelete).toHaveBeenCalledWith(1);
       expect(result).toEqual(deleteResult);
     });
   });
@@ -246,10 +247,10 @@ describe('BandsService', () => {
       const result = await service.findByCountry('USA');
 
       expect(mockBandsRepository.find).toHaveBeenCalledWith({
-        where: { 
-          country: { 
-            name: 'USA' 
-          } 
+        where: {
+          country: {
+            name: 'USA'
+          }
         },
         relations: ['members', 'albums', 'country'],
       });

@@ -17,6 +17,7 @@ describe('MembersService', () => {
     findOne: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    softDelete: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -127,12 +128,12 @@ describe('MembersService', () => {
 
   describe('remove', () => {
     it('should delete a member', async () => {
-      const deleteResult = { affected: 1, raw: [] };
-      mockRepository.delete.mockResolvedValue(deleteResult);
+      const deleteResult = { affected: 1, raw: [], generatedMaps: [] };
+      mockRepository.softDelete.mockResolvedValue(deleteResult);
 
       const result = await service.remove(1);
 
-      expect(mockRepository.delete).toHaveBeenCalledWith(1);
+      expect(mockRepository.softDelete).toHaveBeenCalledWith(1);
       expect(result).toEqual(deleteResult);
     });
   });
