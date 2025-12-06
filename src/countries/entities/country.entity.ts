@@ -1,12 +1,12 @@
-import { 
-  Entity, 
-  PrimaryGeneratedColumn, 
-  Column, 
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  Index
+  Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Band } from '../../bands/entities/band.entity';
@@ -36,7 +36,11 @@ export class Country {
     example: 'GBR',
     maxLength: 3,
   })
-  @Column({ unique: true, length: 3, comment: 'ISO 3166-1 alpha-3 country code' })
+  @Column({
+    unique: true,
+    length: 3,
+    comment: 'ISO 3166-1 alpha-3 country code',
+  })
   code: string;
 
   @ApiProperty({
@@ -44,7 +48,11 @@ export class Country {
     example: 'GB',
     maxLength: 2,
   })
-  @Column({ unique: true, length: 2, comment: 'ISO 3166-1 alpha-2 country code' })
+  @Column({
+    unique: true,
+    length: 2,
+    comment: 'ISO 3166-1 alpha-2 country code',
+  })
   alpha2Code: string;
 
   @ApiProperty({
@@ -52,7 +60,11 @@ export class Country {
     example: 826,
     required: false,
   })
-  @Column({ type: 'int', nullable: true, comment: 'ISO 3166-1 numeric country code' })
+  @Column({
+    type: 'int',
+    nullable: true,
+    comment: 'ISO 3166-1 numeric country code',
+  })
   numericCode: number;
 
   @ApiProperty({

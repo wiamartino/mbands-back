@@ -65,7 +65,10 @@ describe('MembersService', () => {
 
   describe('findAll', () => {
     it('should return all members with relations', async () => {
-      const members = [{ id: 1, name: 'John Doe' }, { id: 2, name: 'Jane Doe' }];
+      const members = [
+        { id: 1, name: 'John Doe' },
+        { id: 2, name: 'Jane Doe' },
+      ];
       mockRepository.find.mockResolvedValue(members);
 
       const result = await service.findAll();

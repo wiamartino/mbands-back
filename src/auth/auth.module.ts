@@ -23,10 +23,12 @@ import { AuthController } from './auth.controller';
       }),
       inject: [ConfigService],
     }),
-    ThrottlerModule.forRoot([{
-      ttl: 60000, // 1 minute
-      limit: 10, // max 10 requests per minute (default)
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 1 minute
+        limit: 10, // max 10 requests per minute (default)
+      },
+    ]),
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy, UsersRepository],

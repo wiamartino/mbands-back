@@ -32,7 +32,7 @@ async function seed() {
   if (!adminRole) {
     adminRole = roleRepo.create({
       name: 'Admin',
-      description: 'Full system access'
+      description: 'Full system access',
     });
     await roleRepo.save(adminRole);
   }
@@ -42,7 +42,7 @@ async function seed() {
   if (!userRole) {
     userRole = roleRepo.create({
       name: 'User',
-      description: 'Standard user access'
+      description: 'Standard user access',
     });
     await roleRepo.save(userRole);
   }
@@ -52,10 +52,7 @@ async function seed() {
 
   for (const countryData of countries) {
     const existing = await countryRepo.findOne({
-      where: [
-        { code: countryData.code },
-        { name: countryData.name }
-      ]
+      where: [{ code: countryData.code }, { name: countryData.name }],
     });
 
     if (!existing) {
@@ -84,7 +81,7 @@ async function seed() {
       active: true,
       website: 'https://www.metallica.com',
       description: 'American heavy metal band formed in Los Angeles.',
-      imageUrl: 'https://example.com/metallica.jpg'
+      imageUrl: 'https://example.com/metallica.jpg',
     });
     await bandRepo.save(metallica);
   }
@@ -99,7 +96,7 @@ async function seed() {
       active: false,
       website: 'https://www.pinkfloyd.com',
       description: 'English rock band formed in London.',
-      imageUrl: 'https://example.com/pinkfloyd.jpg'
+      imageUrl: 'https://example.com/pinkfloyd.jpg',
     });
     await bandRepo.save(pinkFloyd);
   }
@@ -114,7 +111,7 @@ async function seed() {
       active: false,
       website: 'https://www.abbasite.com',
       description: 'Swedish pop supergroup formed in Stockholm.',
-      imageUrl: 'https://example.com/abba.jpg'
+      imageUrl: 'https://example.com/abba.jpg',
     });
     await bandRepo.save(abba);
   }
@@ -129,7 +126,7 @@ async function seed() {
       active: true,
       website: 'https://www.acdc.com',
       description: 'Australian rock band formed in Sydney.',
-      imageUrl: 'https://example.com/acdc.jpg'
+      imageUrl: 'https://example.com/acdc.jpg',
     });
     await bandRepo.save(acdc);
   }
@@ -144,13 +141,15 @@ async function seed() {
       active: false,
       website: 'https://www.rush.com',
       description: 'Canadian rock band formed in Toronto.',
-      imageUrl: 'https://example.com/rush.jpg'
+      imageUrl: 'https://example.com/rush.jpg',
     });
     await bandRepo.save(rush);
   }
 
   // Create members with enhanced data
-  let jamesHetfield = await memberRepo.findOne({ where: { name: 'James Hetfield' } });
+  let jamesHetfield = await memberRepo.findOne({
+    where: { name: 'James Hetfield' },
+  });
   if (!jamesHetfield) {
     jamesHetfield = memberRepo.create({
       name: 'James Hetfield',
@@ -158,7 +157,8 @@ async function seed() {
       band: metallica,
       joinDate: new Date('1981-10-28'),
       isActive: true,
-      biography: 'Co-founder, lead vocalist, rhythm guitarist, and primary songwriter for Metallica.'
+      biography:
+        'Co-founder, lead vocalist, rhythm guitarist, and primary songwriter for Metallica.',
     });
     await memberRepo.save(jamesHetfield);
   }
@@ -171,12 +171,14 @@ async function seed() {
       band: metallica,
       joinDate: new Date('1981-10-28'),
       isActive: true,
-      biography: 'Danish musician and co-founder of Metallica.'
+      biography: 'Danish musician and co-founder of Metallica.',
     });
     await memberRepo.save(larsUlrich);
   }
 
-  let davidGilmour = await memberRepo.findOne({ where: { name: 'David Gilmour' } });
+  let davidGilmour = await memberRepo.findOne({
+    where: { name: 'David Gilmour' },
+  });
   if (!davidGilmour) {
     davidGilmour = memberRepo.create({
       name: 'David Gilmour',
@@ -185,12 +187,15 @@ async function seed() {
       joinDate: new Date('1968-02-01'),
       leaveDate: new Date('2014-07-07'),
       isActive: false,
-      biography: 'English guitarist, singer, and songwriter, best known as a member of Pink Floyd.'
+      biography:
+        'English guitarist, singer, and songwriter, best known as a member of Pink Floyd.',
     });
     await memberRepo.save(davidGilmour);
   }
 
-  let bjornUlvaeus = await memberRepo.findOne({ where: { name: 'Björn Ulvaeus' } });
+  let bjornUlvaeus = await memberRepo.findOne({
+    where: { name: 'Björn Ulvaeus' },
+  });
   if (!bjornUlvaeus) {
     bjornUlvaeus = memberRepo.create({
       name: 'Björn Ulvaeus',
@@ -199,7 +204,8 @@ async function seed() {
       joinDate: new Date('1972-01-01'),
       leaveDate: new Date('1982-12-11'),
       isActive: false,
-      biography: 'Swedish songwriter, composer, musician, writer, and producer.'
+      biography:
+        'Swedish songwriter, composer, musician, writer, and producer.',
     });
     await memberRepo.save(bjornUlvaeus);
   }
@@ -212,7 +218,7 @@ async function seed() {
       band: acdc,
       joinDate: new Date('1973-12-01'),
       isActive: true,
-      biography: 'Scottish-Australian guitarist and co-founder of AC/DC.'
+      biography: 'Scottish-Australian guitarist and co-founder of AC/DC.',
     });
     await memberRepo.save(angusYoung);
   }
@@ -226,13 +232,16 @@ async function seed() {
       joinDate: new Date('1968-09-01'),
       leaveDate: new Date('2018-01-01'),
       isActive: false,
-      biography: 'Canadian musician, singer, and songwriter, best known as the lead vocalist, bassist, and keyboardist for Rush.'
+      biography:
+        'Canadian musician, singer, and songwriter, best known as the lead vocalist, bassist, and keyboardist for Rush.',
     });
     await memberRepo.save(geddyLee);
   }
 
   // Create albums with enhanced data
-  let masterOfPuppets = await albumRepo.findOne({ where: { name: 'Master of Puppets' } });
+  let masterOfPuppets = await albumRepo.findOne({
+    where: { name: 'Master of Puppets' },
+  });
   if (!masterOfPuppets) {
     masterOfPuppets = albumRepo.create({
       name: 'Master of Puppets',
@@ -241,14 +250,17 @@ async function seed() {
       releaseDate: new Date('1986-03-03'),
       label: 'Elektra Records',
       producer: 'Flemming Rasmussen',
-      description: 'The third studio album by American heavy metal band Metallica.',
+      description:
+        'The third studio album by American heavy metal band Metallica.',
       coverImageUrl: 'https://example.com/master-of-puppets.jpg',
-      totalTracks: 8
+      totalTracks: 8,
     });
     await albumRepo.save(masterOfPuppets);
   }
 
-  let darkSideOfTheMoon = await albumRepo.findOne({ where: { name: 'The Dark Side of the Moon' } });
+  let darkSideOfTheMoon = await albumRepo.findOne({
+    where: { name: 'The Dark Side of the Moon' },
+  });
   if (!darkSideOfTheMoon) {
     darkSideOfTheMoon = albumRepo.create({
       name: 'The Dark Side of the Moon',
@@ -257,36 +269,41 @@ async function seed() {
       releaseDate: new Date('1973-03-01'),
       label: 'Harvest Records',
       producer: 'Pink Floyd',
-      description: 'The eighth studio album by the English rock band Pink Floyd.',
+      description:
+        'The eighth studio album by the English rock band Pink Floyd.',
       coverImageUrl: 'https://example.com/dark-side-of-the-moon.jpg',
-      totalTracks: 10
+      totalTracks: 10,
     });
     await albumRepo.save(darkSideOfTheMoon);
   }
 
   // Create songs with enhanced data
-  let masterOfPuppetsSong = await songRepo.findOne({ where: { title: 'Master of Puppets', band: { id: metallica.id } } });
+  let masterOfPuppetsSong = await songRepo.findOne({
+    where: { title: 'Master of Puppets', band: { id: metallica.id } },
+  });
   if (!masterOfPuppetsSong) {
     masterOfPuppetsSong = songRepo.create({
       title: 'Master of Puppets',
       band: metallica,
       duration: 516, // 8:36 in seconds
       trackNumber: 1,
-      lyrics: 'Master of puppets I\'m pulling your strings...',
-      videoUrl: 'https://youtube.com/watch?v=example'
+      lyrics: "Master of puppets I'm pulling your strings...",
+      videoUrl: 'https://youtube.com/watch?v=example',
     });
     await songRepo.save(masterOfPuppetsSong);
   }
 
-  let money = await songRepo.findOne({ where: { title: 'Money', band: { id: pinkFloyd.id } } });
+  let money = await songRepo.findOne({
+    where: { title: 'Money', band: { id: pinkFloyd.id } },
+  });
   if (!money) {
     money = songRepo.create({
       title: 'Money',
       band: pinkFloyd,
       duration: 382, // 6:22 in seconds
       trackNumber: 6,
-      lyrics: 'Money, it\'s a gas...',
-      videoUrl: 'https://youtube.com/watch?v=example2'
+      lyrics: "Money, it's a gas...",
+      videoUrl: 'https://youtube.com/watch?v=example2',
     });
     await songRepo.save(money);
   }
@@ -294,7 +311,9 @@ async function seed() {
   // Associate songs with albums
   if (masterOfPuppets && masterOfPuppetsSong) {
     if (!masterOfPuppets.songs) masterOfPuppets.songs = [];
-    const hasSong = masterOfPuppets.songs.some(s => s.id === masterOfPuppetsSong.id);
+    const hasSong = masterOfPuppets.songs.some(
+      (s) => s.id === masterOfPuppetsSong.id,
+    );
     if (!hasSong) {
       masterOfPuppets.songs = [...masterOfPuppets.songs, masterOfPuppetsSong];
       await albumRepo.save(masterOfPuppets);
@@ -303,7 +322,7 @@ async function seed() {
 
   if (darkSideOfTheMoon && money) {
     if (!darkSideOfTheMoon.songs) darkSideOfTheMoon.songs = [];
-    const hasSong = darkSideOfTheMoon.songs.some(s => s.id === money.id);
+    const hasSong = darkSideOfTheMoon.songs.some((s) => s.id === money.id);
     if (!hasSong) {
       darkSideOfTheMoon.songs = [...darkSideOfTheMoon.songs, money];
       await albumRepo.save(darkSideOfTheMoon);
@@ -311,20 +330,23 @@ async function seed() {
   }
 
   // Create events with enhanced data
-  let metallicaConcert = await eventRepo.findOne({ where: { title: 'Metallica World Tour 2024' } });
+  let metallicaConcert = await eventRepo.findOne({
+    where: { title: 'Metallica World Tour 2024' },
+  });
   if (!metallicaConcert) {
     metallicaConcert = eventRepo.create({
       title: 'Metallica World Tour 2024',
-      description: 'An epic heavy metal concert featuring Metallica\'s greatest hits.',
+      description:
+        "An epic heavy metal concert featuring Metallica's greatest hits.",
       date: new Date('2024-12-15T20:00:00Z'),
       band: metallica,
       eventType: 'Concert',
       venue: 'Madison Square Garden',
       city: 'New York',
       country: usa,
-      ticketPrice: 150.00,
+      ticketPrice: 150.0,
       ticketUrl: 'https://tickets.example.com/metallica',
-      isActive: true
+      isActive: true,
     });
     await eventRepo.save(metallicaConcert);
   }
@@ -341,7 +363,7 @@ async function seed() {
       firstName: 'Admin',
       lastName: 'User',
       isActive: true,
-      roles: [adminRole]
+      roles: [adminRole],
     });
     await userRepo.save(adminUser);
   }
@@ -355,7 +377,7 @@ async function seed() {
       firstName: 'John',
       lastName: 'Doe',
       isActive: true,
-      roles: [userRole]
+      roles: [userRole],
     });
     await userRepo.save(regularUser);
   }

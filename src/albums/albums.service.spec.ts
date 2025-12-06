@@ -11,7 +11,7 @@ const mockAlbumsRepository = {
   findOne: jest.fn(),
   update: jest.fn(),
   delete: jest.fn(),
-  softDelete: jest.fn()
+  softDelete: jest.fn(),
 };
 
 describe('AlbumsService', () => {
@@ -23,9 +23,9 @@ describe('AlbumsService', () => {
         AlbumsService,
         {
           provide: getRepositoryToken(Album),
-          useValue: mockAlbumsRepository
-        }
-      ]
+          useValue: mockAlbumsRepository,
+        },
+      ],
     }).compile();
 
     service = module.get<AlbumsService>(AlbumsService);
@@ -40,7 +40,9 @@ describe('AlbumsService', () => {
     mockAlbumsRepository.save.mockResolvedValue({ id: 1 });
 
     const result = await service.create({ title: 'Test Album' } as any);
-    expect(mockAlbumsRepository.create).toHaveBeenCalledWith({ title: 'Test Album' });
+    expect(mockAlbumsRepository.create).toHaveBeenCalledWith({
+      title: 'Test Album',
+    });
     expect(mockAlbumsRepository.save).toHaveBeenCalledWith({ id: 1 });
     expect(result.id).toBe(1);
   });
@@ -72,7 +74,9 @@ describe('AlbumsService', () => {
   it('update() should call repository update', async () => {
     mockAlbumsRepository.update.mockResolvedValue({ affected: 1 });
     const result = await service.update(1, { title: 'Updated' } as any);
-    expect(mockAlbumsRepository.update).toHaveBeenCalledWith(1, { title: 'Updated' });
+    expect(mockAlbumsRepository.update).toHaveBeenCalledWith(1, {
+      title: 'Updated',
+    });
     expect(result).toEqual({ affected: 1 });
   });
 

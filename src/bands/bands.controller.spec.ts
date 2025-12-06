@@ -45,7 +45,7 @@ describe('BandsController', () => {
         name: 'Rata Blanca',
         genre: 'Heavy metal',
         yearFormed: 1985,
-        countryId: 1
+        countryId: 1,
       };
       (service.create as jest.Mock).mockResolvedValue({ id: 1, ...dto });
       expect(await controller.create(dto)).toEqual({ id: 1, ...dto });
@@ -109,28 +109,42 @@ describe('BandsController', () => {
 
   describe('findByGenre', () => {
     it('should call service.findByGenre with the provided genre', async () => {
-      (service.findByGenre as jest.Mock).mockResolvedValue([{ id: 4, genre: 'Metal' }]);
-      expect(await controller.findByGenre('Metal')).toEqual([{ id: 4, genre: 'Metal' }]);
+      (service.findByGenre as jest.Mock).mockResolvedValue([
+        { id: 4, genre: 'Metal' },
+      ]);
+      expect(await controller.findByGenre('Metal')).toEqual([
+        { id: 4, genre: 'Metal' },
+      ]);
       expect(service.findByGenre).toHaveBeenCalledWith('Metal');
     });
   });
 
   describe('findByYear', () => {
     it('should call service.findByYear with the provided year', async () => {
-      (service.findByYear as jest.Mock).mockResolvedValue([{ id: 5, yearFormed: 1985 }]);
-      expect(await controller.findByYear(1985)).toEqual([{ id: 5, yearFormed: 1985 }]);
+      (service.findByYear as jest.Mock).mockResolvedValue([
+        { id: 5, yearFormed: 1985 },
+      ]);
+      expect(await controller.findByYear(1985)).toEqual([
+        { id: 5, yearFormed: 1985 },
+      ]);
       expect(service.findByYear).toHaveBeenCalledWith(1985);
     });
 
     it('should throw NotFoundException for invalid year', async () => {
-      await expect(controller.findByYear(NaN)).rejects.toThrow(NotFoundException);
+      await expect(controller.findByYear(NaN)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
   describe('findByCountry', () => {
     it('should call service.findByCountry with the provided country', async () => {
-      (service.findByCountry as jest.Mock).mockResolvedValue([{ id: 6, country: 'Argentina' }]);
-      expect(await controller.findByCountry('Argentina')).toEqual([{ id: 6, country: 'Argentina' }]);
+      (service.findByCountry as jest.Mock).mockResolvedValue([
+        { id: 6, country: 'Argentina' },
+      ]);
+      expect(await controller.findByCountry('Argentina')).toEqual([
+        { id: 6, country: 'Argentina' },
+      ]);
       expect(service.findByCountry).toHaveBeenCalledWith('Argentina');
     });
   });

@@ -13,11 +13,11 @@ export class BandsService {
     private readonly bandsRepository: Repository<Band>,
     @InjectRepository(Country)
     private readonly countriesRepository: Repository<Country>,
-  ) { }
+  ) {}
 
   async create(createBandDto: CreateBandDto): Promise<Band> {
     const country = await this.countriesRepository.findOne({
-      where: { id: createBandDto.countryId }
+      where: { id: createBandDto.countryId },
     });
 
     if (!country) {
@@ -103,8 +103,8 @@ export class BandsService {
     return this.bandsRepository.find({
       where: {
         country: {
-          name: countryName
-        }
+          name: countryName,
+        },
       },
       relations: ['members', 'albums', 'country'],
     });

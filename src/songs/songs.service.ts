@@ -10,7 +10,7 @@ export class SongsService {
   constructor(
     @InjectRepository(Song)
     private readonly songsRepository: Repository<Song>,
-  ) { }
+  ) {}
   create(createSongDto: CreateSongDto) {
     const newSong = this.songsRepository.create(createSongDto);
     return this.songsRepository.save(newSong);

@@ -51,7 +51,7 @@ export class Song {
 
   @ApiProperty({
     description: 'Lyrics of the song',
-    example: 'Hey Jude, don\'t make it bad...',
+    example: "Hey Jude, don't make it bad...",
     required: false,
   })
   @Column({ type: 'text', nullable: true })
@@ -92,9 +92,9 @@ export class Song {
     description: 'The band that created this song',
     type: () => Band,
   })
-  @ManyToOne(() => Band, (band) => band.songs, { 
+  @ManyToOne(() => Band, (band) => band.songs, {
     onDelete: 'CASCADE',
-    nullable: false 
+    nullable: false,
   })
   @JoinColumn({ name: 'band_id' })
   band: Band;

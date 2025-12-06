@@ -18,17 +18,19 @@ import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { EventsModule } from './events/events.module';
 import { Event } from './events/entities/event.entity';
-import {Role } from './users/entities/role.entity';
+import { Role } from './users/entities/role.entity';
 import { CountriesModule } from './countries/countries.module';
 import { Country } from './countries/entities/country.entity';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    ThrottlerModule.forRoot([{
-      ttl: 60000, // 1 minute
-      limit: 100, // max 100 requests per minute (global default)
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 1 minute
+        limit: 100, // max 100 requests per minute (global default)
+      },
+    ]),
     TypeOrmModule.forRoot({
       type: process.env.DB_TYPE as any,
       host: process.env.DB_HOST,
@@ -47,7 +49,7 @@ import { Country } from './countries/entities/country.entity';
     AuthModule,
     UsersModule,
     EventsModule,
-    CountriesModule
+    CountriesModule,
   ],
   controllers: [AppController],
   providers: [

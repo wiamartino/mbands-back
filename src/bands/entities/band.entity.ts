@@ -4,17 +4,17 @@ import { Event } from '../../events/entities/event.entity';
 import { Song } from '../../songs/entities/song.entity';
 import { Country } from '../../countries/entities/country.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { 
-  Entity, 
-  PrimaryGeneratedColumn, 
-  Column, 
-  OneToMany, 
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
   ManyToOne,
   JoinColumn,
-  CreateDateColumn, 
-  UpdateDateColumn, 
+  CreateDateColumn,
+  UpdateDateColumn,
   DeleteDateColumn,
-  Index
+  Index,
 } from 'typeorm';
 
 @Entity()
@@ -46,11 +46,15 @@ export class Band {
   genre: string;
 
   @ApiProperty({
-    description: 'Year the band was formed (must be between 1900 and current year)',
+    description:
+      'Year the band was formed (must be between 1900 and current year)',
     example: 1960,
     minimum: 1900,
   })
-  @Column({ type: 'int', comment: 'Year the band was formed (must be between 1900 and current year)' })
+  @Column({
+    type: 'int',
+    comment: 'Year the band was formed (must be between 1900 and current year)',
+  })
   yearFormed: number;
 
   @ApiProperty({
@@ -113,9 +117,9 @@ export class Band {
     description: 'Country where the band originates from',
     type: () => Country,
   })
-  @ManyToOne(() => Country, (country) => country.bands, { 
+  @ManyToOne(() => Country, (country) => country.bands, {
     onDelete: 'CASCADE',
-    nullable: false 
+    nullable: false,
   })
   @JoinColumn({ name: 'country_id' })
   country: Country;

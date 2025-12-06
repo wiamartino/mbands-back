@@ -76,7 +76,10 @@ describe('AuthService', () => {
       const result = await service.validateUser('testuser', 'password123');
 
       expect(usersService.findOne).toHaveBeenCalledWith('testuser');
-      expect(bcrypt.compare).toHaveBeenCalledWith('password123', 'hashedPassword');
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        'password123',
+        'hashedPassword',
+      );
       expect(result).toEqual(mockUser);
     });
 

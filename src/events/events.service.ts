@@ -10,7 +10,7 @@ export class EventsService {
   constructor(
     @InjectRepository(Event)
     private readonly eventsRepository: Repository<Event>,
-  ) { }
+  ) {}
 
   create(createEventDto: CreateEventDto) {
     const event = this.eventsRepository.create(createEventDto);

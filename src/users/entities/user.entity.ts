@@ -1,13 +1,13 @@
-import { 
-  Entity, 
-  Column, 
-  PrimaryGeneratedColumn, 
-  ManyToMany, 
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
   JoinTable,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  Index
+  Index,
 } from 'typeorm';
 import { ApiProperty, ApiHideProperty } from '@nestjs/swagger';
 import { Role } from './role.entity';

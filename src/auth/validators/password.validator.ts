@@ -1,31 +1,33 @@
-import { 
-  registerDecorator, 
-  ValidationOptions, 
-  ValidatorConstraint, 
-  ValidatorConstraintInterface, 
-  ValidationArguments 
+import {
+  registerDecorator,
+  ValidationOptions,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  ValidationArguments,
 } from 'class-validator';
 
 @ValidatorConstraint({ async: false })
-export class IsStrongPasswordConstraint implements ValidatorConstraintInterface {
+export class IsStrongPasswordConstraint
+  implements ValidatorConstraintInterface
+{
   validate(password: string, args: ValidationArguments) {
     if (!password) return false;
-    
+
     // At least 8 characters long
     if (password.length < 8) return false;
-    
+
     // At least one uppercase letter
     if (!/[A-Z]/.test(password)) return false;
-    
+
     // At least one lowercase letter
     if (!/[a-z]/.test(password)) return false;
-    
+
     // At least one number
     if (!/\d/.test(password)) return false;
-    
+
     // At least one special character
     if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) return false;
-    
+
     return true;
   }
 
@@ -35,7 +37,7 @@ export class IsStrongPasswordConstraint implements ValidatorConstraintInterface 
 }
 
 export function IsStrongPassword(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,

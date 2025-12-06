@@ -37,9 +37,15 @@ export class ImproveSchema1721475600000 implements MigrationInterface {
     `);
 
     // Create indexes for Band table
-    await queryRunner.query(`CREATE INDEX IF NOT EXISTS "IDX_band_genre_country" ON "band" ("genre", "country");`);
-    await queryRunner.query(`CREATE INDEX IF NOT EXISTS "IDX_band_yearFormed" ON "band" ("yearFormed");`);
-    await queryRunner.query(`CREATE INDEX IF NOT EXISTS "IDX_band_active" ON "band" ("active");`);
+    await queryRunner.query(
+      `CREATE INDEX IF NOT EXISTS "IDX_band_genre_country" ON "band" ("genre", "country");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX IF NOT EXISTS "IDX_band_yearFormed" ON "band" ("yearFormed");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX IF NOT EXISTS "IDX_band_active" ON "band" ("active");`,
+    );
 
     // Update Member table
     await queryRunner.query(`
@@ -83,7 +89,9 @@ export class ImproveSchema1721475600000 implements MigrationInterface {
     `);
 
     // Create index for Song title
-    await queryRunner.query(`CREATE INDEX IF NOT EXISTS "IDX_song_title" ON "song" ("title");`);
+    await queryRunner.query(
+      `CREATE INDEX IF NOT EXISTS "IDX_song_title" ON "song" ("title");`,
+    );
 
     // Update Album table
     await queryRunner.query(`
@@ -107,8 +115,12 @@ export class ImproveSchema1721475600000 implements MigrationInterface {
     `);
 
     // Create indexes for Album table
-    await queryRunner.query(`CREATE INDEX IF NOT EXISTS "IDX_album_releaseDate" ON "album" ("releaseDate");`);
-    await queryRunner.query(`CREATE INDEX IF NOT EXISTS "IDX_album_genre" ON "album" ("genre");`);
+    await queryRunner.query(
+      `CREATE INDEX IF NOT EXISTS "IDX_album_releaseDate" ON "album" ("releaseDate");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX IF NOT EXISTS "IDX_album_genre" ON "album" ("genre");`,
+    );
 
     // Update User table
     await queryRunner.query(`
@@ -138,8 +150,12 @@ export class ImproveSchema1721475600000 implements MigrationInterface {
     `);
 
     // Create indexes for User table
-    await queryRunner.query(`CREATE INDEX IF NOT EXISTS "IDX_user_username" ON "user" ("username");`);
-    await queryRunner.query(`CREATE INDEX IF NOT EXISTS "IDX_user_email" ON "user" ("email");`);
+    await queryRunner.query(
+      `CREATE INDEX IF NOT EXISTS "IDX_user_username" ON "user" ("username");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX IF NOT EXISTS "IDX_user_email" ON "user" ("email");`,
+    );
 
     // Update Role table
     await queryRunner.query(`
@@ -200,13 +216,17 @@ export class ImproveSchema1721475600000 implements MigrationInterface {
     `);
 
     // Create indexes for Event table
-    await queryRunner.query(`CREATE INDEX IF NOT EXISTS "IDX_event_date" ON "event" ("date");`);
-    await queryRunner.query(`CREATE INDEX IF NOT EXISTS "IDX_event_eventType" ON "event" ("eventType");`);
+    await queryRunner.query(
+      `CREATE INDEX IF NOT EXISTS "IDX_event_date" ON "event" ("date");`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX IF NOT EXISTS "IDX_event_eventType" ON "event" ("eventType");`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     // Remove added columns and constraints (reverse migration)
-    
+
     // Drop indexes
     await queryRunner.query(`DROP INDEX IF EXISTS "IDX_event_eventType";`);
     await queryRunner.query(`DROP INDEX IF EXISTS "IDX_event_date";`);
@@ -220,30 +240,56 @@ export class ImproveSchema1721475600000 implements MigrationInterface {
     await queryRunner.query(`DROP INDEX IF EXISTS "IDX_band_genre_country";`);
 
     // Drop constraints
-    await queryRunner.query(`ALTER TABLE "band" DROP CONSTRAINT IF EXISTS "CHK_band_year_formed";`);
-    await queryRunner.query(`ALTER TABLE "band" DROP CONSTRAINT IF EXISTS "UQ_band_name";`);
-    await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT IF EXISTS "UQ_user_email";`);
-    await queryRunner.query(`ALTER TABLE "user" DROP CONSTRAINT IF EXISTS "UQ_user_username";`);
-    await queryRunner.query(`ALTER TABLE "role" DROP CONSTRAINT IF EXISTS "UQ_role_name";`);
+    await queryRunner.query(
+      `ALTER TABLE "band" DROP CONSTRAINT IF EXISTS "CHK_band_year_formed";`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "band" DROP CONSTRAINT IF EXISTS "UQ_band_name";`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "user" DROP CONSTRAINT IF EXISTS "UQ_user_email";`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "user" DROP CONSTRAINT IF EXISTS "UQ_user_username";`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "role" DROP CONSTRAINT IF EXISTS "UQ_role_name";`,
+    );
 
     // Remove added columns from all tables
     const tables = ['band', 'member', 'song', 'album', 'user', 'role', 'event'];
     const timestampColumns = ['createdAt', 'updatedAt', 'deletedAt'];
-    
+
     for (const table of tables) {
       for (const column of timestampColumns) {
-        await queryRunner.query(`ALTER TABLE "${table}" DROP COLUMN IF EXISTS "${column}";`);
+        await queryRunner.query(
+          `ALTER TABLE "${table}" DROP COLUMN IF EXISTS "${column}";`,
+        );
       }
     }
 
     // Remove specific columns
-    await queryRunner.query(`ALTER TABLE "band" DROP COLUMN IF EXISTS "description", DROP COLUMN IF EXISTS "imageUrl";`);
-    await queryRunner.query(`ALTER TABLE "member" DROP COLUMN IF EXISTS "joinDate", DROP COLUMN IF EXISTS "leaveDate", DROP COLUMN IF EXISTS "isActive", DROP COLUMN IF EXISTS "biography";`);
-    await queryRunner.query(`ALTER TABLE "song" DROP COLUMN IF EXISTS "duration", DROP COLUMN IF EXISTS "trackNumber", DROP COLUMN IF EXISTS "lyrics", DROP COLUMN IF EXISTS "videoUrl";`);
-    await queryRunner.query(`ALTER TABLE "album" DROP COLUMN IF EXISTS "description", DROP COLUMN IF EXISTS "coverImageUrl", DROP COLUMN IF EXISTS "totalTracks";`);
-    await queryRunner.query(`ALTER TABLE "user" DROP COLUMN IF EXISTS "firstName", DROP COLUMN IF EXISTS "lastName", DROP COLUMN IF EXISTS "isActive", DROP COLUMN IF EXISTS "lastLoginAt";`);
-    await queryRunner.query(`ALTER TABLE "role" DROP COLUMN IF EXISTS "description";`);
-    await queryRunner.query(`ALTER TABLE "event" DROP COLUMN IF EXISTS "eventType", DROP COLUMN IF EXISTS "venue", DROP COLUMN IF EXISTS "city", DROP COLUMN IF EXISTS "country", DROP COLUMN IF EXISTS "ticketPrice", DROP COLUMN IF EXISTS "ticketUrl", DROP COLUMN IF EXISTS "isActive";`);
+    await queryRunner.query(
+      `ALTER TABLE "band" DROP COLUMN IF EXISTS "description", DROP COLUMN IF EXISTS "imageUrl";`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "member" DROP COLUMN IF EXISTS "joinDate", DROP COLUMN IF EXISTS "leaveDate", DROP COLUMN IF EXISTS "isActive", DROP COLUMN IF EXISTS "biography";`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "song" DROP COLUMN IF EXISTS "duration", DROP COLUMN IF EXISTS "trackNumber", DROP COLUMN IF EXISTS "lyrics", DROP COLUMN IF EXISTS "videoUrl";`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "album" DROP COLUMN IF EXISTS "description", DROP COLUMN IF EXISTS "coverImageUrl", DROP COLUMN IF EXISTS "totalTracks";`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "user" DROP COLUMN IF EXISTS "firstName", DROP COLUMN IF EXISTS "lastName", DROP COLUMN IF EXISTS "isActive", DROP COLUMN IF EXISTS "lastLoginAt";`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "role" DROP COLUMN IF EXISTS "description";`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "event" DROP COLUMN IF EXISTS "eventType", DROP COLUMN IF EXISTS "venue", DROP COLUMN IF EXISTS "city", DROP COLUMN IF EXISTS "country", DROP COLUMN IF EXISTS "ticketPrice", DROP COLUMN IF EXISTS "ticketUrl", DROP COLUMN IF EXISTS "isActive";`,
+    );
 
     // Drop enum types
     await queryRunner.query(`DROP TYPE IF EXISTS "event_eventtype_enum";`);

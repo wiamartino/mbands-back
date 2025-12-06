@@ -10,7 +10,7 @@ export class AlbumsService {
   constructor(
     @InjectRepository(Album)
     private readonly albumsRepository: Repository<Album>,
-  ) { }
+  ) {}
 
   async create(createAlbumDto: CreateAlbumDto): Promise<Album> {
     const band = this.albumsRepository.create(createAlbumDto);

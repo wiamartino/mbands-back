@@ -10,7 +10,7 @@ export class MembersService {
   constructor(
     @InjectRepository(Member)
     private readonly membersRepository: Repository<Member>,
-  ) { }
+  ) {}
   async create(createMemberDto: CreateMemberDto) {
     const band = this.membersRepository.create(createMemberDto);
     return this.membersRepository.save(band);

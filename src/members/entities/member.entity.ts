@@ -1,12 +1,12 @@
-import { 
-  Entity, 
-  PrimaryGeneratedColumn, 
-  Column, 
-  ManyToOne, 
-  CreateDateColumn, 
-  UpdateDateColumn, 
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
   DeleteDateColumn,
-  JoinColumn
+  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Band } from '../../bands/entities/band.entity';
@@ -97,9 +97,9 @@ export class Member {
     description: 'The band this member belongs to',
     type: () => Band,
   })
-  @ManyToOne(() => Band, (band) => band.members, { 
+  @ManyToOne(() => Band, (band) => band.members, {
     onDelete: 'CASCADE',
-    nullable: false 
+    nullable: false,
   })
   @JoinColumn({ name: 'band_id' })
   band: Band;

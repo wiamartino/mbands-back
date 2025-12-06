@@ -7,15 +7,24 @@ export class UsersService {
   constructor(private usersRepository: UsersRepository) {}
 
   async findOne(username: string): Promise<User | undefined> {
-    return this.usersRepository.findOne({ where: { username }, relations: ['roles'] });
+    return this.usersRepository.findOne({
+      where: { username },
+      relations: ['roles'],
+    });
   }
 
   async findByEmail(email: string): Promise<User | undefined> {
-    return this.usersRepository.findOne({ where: { email }, relations: ['roles'] });
+    return this.usersRepository.findOne({
+      where: { email },
+      relations: ['roles'],
+    });
   }
 
   async findById(userId: number): Promise<User | undefined> {
-    return this.usersRepository.findOne({ where: { userId }, relations: ['roles'] });
+    return this.usersRepository.findOne({
+      where: { userId },
+      relations: ['roles'],
+    });
   }
 
   async create(user: User): Promise<User> {
@@ -23,8 +32,8 @@ export class UsersService {
   }
 
   async updateLastLogin(userId: number): Promise<void> {
-    await this.usersRepository.update(userId, { 
-      lastLoginAt: new Date() 
+    await this.usersRepository.update(userId, {
+      lastLoginAt: new Date(),
     });
   }
 }

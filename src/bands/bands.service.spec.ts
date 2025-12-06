@@ -47,7 +47,9 @@ describe('BandsService', () => {
 
     service = module.get<BandsService>(BandsService);
     bandsRepository = module.get<Repository<Band>>(getRepositoryToken(Band));
-    countriesRepository = module.get<Repository<Country>>(getRepositoryToken(Country));
+    countriesRepository = module.get<Repository<Country>>(
+      getRepositoryToken(Country),
+    );
   });
 
   afterEach(() => {
@@ -76,7 +78,7 @@ describe('BandsService', () => {
       const result = await service.create(createBandDto);
 
       expect(mockCountriesRepository.findOne).toHaveBeenCalledWith({
-        where: { id: createBandDto.countryId }
+        where: { id: createBandDto.countryId },
       });
       expect(mockBandsRepository.create).toHaveBeenCalledWith({
         ...createBandDto,
@@ -95,13 +97,18 @@ describe('BandsService', () => {
 
       mockCountriesRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.create(createBandDto)).rejects.toThrow('Country with ID 999 not found');
+      await expect(service.create(createBandDto)).rejects.toThrow(
+        'Country with ID 999 not found',
+      );
     });
   });
 
   describe('findAll', () => {
     it('should return paginated bands', async () => {
-      const mockBands = [{ id: 1, name: 'Band 1' }, { id: 2, name: 'Band 2' }];
+      const mockBands = [
+        { id: 1, name: 'Band 1' },
+        { id: 2, name: 'Band 2' },
+      ];
       mockBandsRepository.find.mockResolvedValue(mockBands);
 
       const result = await service.findAll(1, 10);
@@ -200,10 +207,12 @@ describe('BandsService', () => {
 
       const result = await service.searchByFirstLetter('T');
 
-      expect(mockBandsRepository.createQueryBuilder).toHaveBeenCalledWith('band');
+      expect(mockBandsRepository.createQueryBuilder).toHaveBeenCalledWith(
+        'band',
+      );
       expect(mockQueryBuilder.where).toHaveBeenCalledWith(
         'band.name LIKE :firstLetter',
-        { firstLetter: 'T%' }
+        { firstLetter: 'T%' },
       );
       expect(result).toEqual(mockBands);
     });
@@ -249,8 +258,8 @@ describe('BandsService', () => {
       expect(mockBandsRepository.find).toHaveBeenCalledWith({
         where: {
           country: {
-            name: 'USA'
-          }
+            name: 'USA',
+          },
         },
         relations: ['members', 'albums', 'country'],
       });

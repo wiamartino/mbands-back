@@ -26,10 +26,7 @@ export class CountriesController {
   }
 
   @Get()
-  findAll(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
-  ) {
+  findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
     return this.countriesService.findAll(+page, +limit);
   }
 

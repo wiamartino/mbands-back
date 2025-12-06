@@ -10,7 +10,7 @@ export class CountriesService {
   constructor(
     @InjectRepository(Country)
     private readonly countriesRepository: Repository<Country>,
-  ) { }
+  ) {}
 
   async create(createCountryDto: CreateCountryDto): Promise<Country> {
     const country = this.countriesRepository.create(createCountryDto);
@@ -93,7 +93,10 @@ export class CountriesService {
     });
   }
 
-  async update(id: number, updateCountryDto: UpdateCountryDto): Promise<Country> {
+  async update(
+    id: number,
+    updateCountryDto: UpdateCountryDto,
+  ): Promise<Country> {
     const country = await this.findOne(id);
     await this.countriesRepository.update(id, updateCountryDto);
     return this.findOne(id);

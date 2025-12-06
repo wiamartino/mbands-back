@@ -131,7 +131,7 @@ export class Album {
   })
   @ManyToOne(() => Band, (band) => band.albums, {
     onDelete: 'CASCADE',
-    nullable: false
+    nullable: false,
   })
   @JoinColumn({ name: 'band_id' })
   band: Band;

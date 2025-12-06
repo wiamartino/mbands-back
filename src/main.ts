@@ -7,12 +7,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Global validation pipe
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true, // Strip properties that do not have decorators
-    forbidNonWhitelisted: true, // Throw an error if non-whitelisted properties are found
-    transform: true, // Automatically transform payloads to be objects typed according to their DTO classes
-    disableErrorMessages: process.env.NODE_ENV === 'production', // Disable detailed error messages in production
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // Strip properties that do not have decorators
+      forbidNonWhitelisted: true, // Throw an error if non-whitelisted properties are found
+      transform: true, // Automatically transform payloads to be objects typed according to their DTO classes
+      disableErrorMessages: process.env.NODE_ENV === 'production', // Disable detailed error messages in production
+    }),
+  );
 
   // Enable CORS
   app.enableCors({

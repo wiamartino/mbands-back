@@ -45,7 +45,7 @@ describe('EventsService', () => {
         title: 'Test Event',
         description: 'Test Description',
         date: '2023-06-15T20:00:00.000Z',
-        bandId: 1
+        bandId: 1,
       };
       const mockEvent = { id: 1, ...createEventDto };
 
@@ -62,7 +62,10 @@ describe('EventsService', () => {
 
   describe('findAll', () => {
     it('should return all events with band relations', async () => {
-      const mockEvents = [{ id: 1, title: 'Event 1' }, { id: 2, title: 'Event 2' }];
+      const mockEvents = [
+        { id: 1, title: 'Event 1' },
+        { id: 2, title: 'Event 2' },
+      ];
       mockRepository.find.mockResolvedValue(mockEvents);
 
       const result = await service.findAll();

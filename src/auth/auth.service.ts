@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, ConflictException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  ConflictException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/entities/user.entity';
@@ -20,7 +24,7 @@ export class AuthService {
 
     // Only use bcrypt to compare passwords - never accept plaintext
     const isMatch: boolean = await bcrypt.compare(password, user.password);
-    
+
     if (!isMatch) {
       throw new BadRequestException('Password does not match');
     }
@@ -28,12 +32,12 @@ export class AuthService {
   }
 
   async login(user: User): Promise<AuthResponseDto> {
-    const payload = { 
-      sub: user.userId, 
-      username: user.username, 
-      email: user.email 
+    const payload = {
+      sub: user.userId,
+      username: user.username,
+      email: user.email,
     };
-    
+
     const userResponse: UserResponseDto = {
       id: user.userId.toString(),
       username: user.username,
@@ -52,7 +56,7 @@ export class AuthService {
 
   async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
     const { username, password, email, firstName, lastName } = registerDto;
-    
+
     const existingUser = await this.userService.findOne(username);
     if (existingUser) {
       throw new ConflictException('Username already exists');
@@ -64,15 +68,15 @@ export class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser: Partial<User> = { 
-      username, 
-      password: hashedPassword, 
-      email, 
+    const newUser: Partial<User> = {
+      username,
+      password: hashedPassword,
+      email,
       firstName: firstName || null,
       lastName: lastName || null,
       isActive: true,
     };
-    
+
     const user = await this.userService.create(newUser as User);
     return this.login(user);
   }

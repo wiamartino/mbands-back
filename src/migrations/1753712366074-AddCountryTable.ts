@@ -1,10 +1,9 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddCountryTable1753712366074 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        // Create Country table
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // Create Country table
+    await queryRunner.query(`
             CREATE TABLE "country" (
                 "id" SERIAL NOT NULL,
                 "name" character varying(100) NOT NULL,
@@ -24,12 +23,16 @@ export class AddCountryTable1753712366074 implements MigrationInterface {
             )
         `);
 
-        // Create indexes for Country table
-        await queryRunner.query(`CREATE INDEX "IDX_country_name" ON "country" ("name")`);
-        await queryRunner.query(`CREATE INDEX "IDX_country_code" ON "country" ("code")`);
+    // Create indexes for Country table
+    await queryRunner.query(
+      `CREATE INDEX "IDX_country_name" ON "country" ("name")`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_country_code" ON "country" ("code")`,
+    );
 
-        // Insert default countries first
-        await queryRunner.query(`
+    // Insert default countries first
+    await queryRunner.query(`
             INSERT INTO "country" ("name", "code", "alpha2Code", "numericCode", "region", "subregion") VALUES
             ('United States', 'USA', 'US', 840, 'Americas', 'Northern America'),
             ('United Kingdom', 'GBR', 'GB', 826, 'Europe', 'Northern Europe'),
@@ -48,17 +51,22 @@ export class AddCountryTable1753712366074 implements MigrationInterface {
             ('Netherlands', 'NLD', 'NL', 528, 'Europe', 'Western Europe')
         `);
 
-        // Check if band table has old country column and handle migration
-        const bandTableExists = await queryRunner.hasTable('band');
-        if (bandTableExists) {
-            const hasOldCountryColumn = await queryRunner.hasColumn('band', 'country');
-            
-            // Add new country_id column to band table
-            await queryRunner.query(`ALTER TABLE "band" ADD COLUMN "country_id" integer`);
+    // Check if band table has old country column and handle migration
+    const bandTableExists = await queryRunner.hasTable('band');
+    if (bandTableExists) {
+      const hasOldCountryColumn = await queryRunner.hasColumn(
+        'band',
+        'country',
+      );
 
-            if (hasOldCountryColumn) {
-                // Migrate existing data from string country to country_id
-                await queryRunner.query(`
+      // Add new country_id column to band table
+      await queryRunner.query(
+        `ALTER TABLE "band" ADD COLUMN "country_id" integer`,
+      );
+
+      if (hasOldCountryColumn) {
+        // Migrate existing data from string country to country_id
+        await queryRunner.query(`
                     UPDATE "band" SET "country_id" = (
                         SELECT c.id FROM "country" c 
                         WHERE c.name = "band"."country" 
@@ -66,31 +74,40 @@ export class AddCountryTable1753712366074 implements MigrationInterface {
                     ) WHERE "band"."country" IS NOT NULL
                 `);
 
-                // Drop the old country string column and its index
-                await queryRunner.query(`DROP INDEX IF EXISTS "IDX_band_genre_country"`);
-                await queryRunner.query(`ALTER TABLE "band" DROP COLUMN "country"`);
-            }
+        // Drop the old country string column and its index
+        await queryRunner.query(
+          `DROP INDEX IF EXISTS "IDX_band_genre_country"`,
+        );
+        await queryRunner.query(`ALTER TABLE "band" DROP COLUMN "country"`);
+      }
 
-            // Make country_id NOT NULL for bands (assuming all bands should have a country)
-            await queryRunner.query(`
+      // Make country_id NOT NULL for bands (assuming all bands should have a country)
+      await queryRunner.query(`
                 UPDATE "band" SET "country_id" = (
                     SELECT id FROM "country" WHERE name = 'United States' LIMIT 1
                 ) WHERE "country_id" IS NULL
             `);
-            await queryRunner.query(`ALTER TABLE "band" ALTER COLUMN "country_id" SET NOT NULL`);
-        }
+      await queryRunner.query(
+        `ALTER TABLE "band" ALTER COLUMN "country_id" SET NOT NULL`,
+      );
+    }
 
-        // Check if event table exists and handle migration
-        const eventTableExists = await queryRunner.hasTable('event');
-        if (eventTableExists) {
-            const hasOldCountryColumn = await queryRunner.hasColumn('event', 'country');
-            
-            // Add country_id column to event table (nullable)
-            await queryRunner.query(`ALTER TABLE "event" ADD COLUMN "country_id" integer`);
+    // Check if event table exists and handle migration
+    const eventTableExists = await queryRunner.hasTable('event');
+    if (eventTableExists) {
+      const hasOldCountryColumn = await queryRunner.hasColumn(
+        'event',
+        'country',
+      );
 
-            if (hasOldCountryColumn) {
-                // Migrate existing data from string country to country_id
-                await queryRunner.query(`
+      // Add country_id column to event table (nullable)
+      await queryRunner.query(
+        `ALTER TABLE "event" ADD COLUMN "country_id" integer`,
+      );
+
+      if (hasOldCountryColumn) {
+        // Migrate existing data from string country to country_id
+        await queryRunner.query(`
                     UPDATE "event" SET "country_id" = (
                         SELECT c.id FROM "country" c 
                         WHERE c.name = "event"."country" 
@@ -98,45 +115,55 @@ export class AddCountryTable1753712366074 implements MigrationInterface {
                     ) WHERE "event"."country" IS NOT NULL
                 `);
 
-                // Drop the old country string column
-                await queryRunner.query(`ALTER TABLE "event" DROP COLUMN "country"`);
-            }
-        }
+        // Drop the old country string column
+        await queryRunner.query(`ALTER TABLE "event" DROP COLUMN "country"`);
+      }
+    }
 
-        // Create foreign key constraints
-        await queryRunner.query(`
+    // Create foreign key constraints
+    await queryRunner.query(`
             ALTER TABLE "band" 
             ADD CONSTRAINT "FK_band_country" 
             FOREIGN KEY ("country_id") REFERENCES "country"("id") ON DELETE CASCADE
         `);
 
-        await queryRunner.query(`
+    await queryRunner.query(`
             ALTER TABLE "event" 
             ADD CONSTRAINT "FK_event_country" 
             FOREIGN KEY ("country_id") REFERENCES "country"("id") ON DELETE CASCADE
         `);
 
-        // Create new indexes
-        await queryRunner.query(`CREATE INDEX "IDX_band_genre_country_id" ON "band" ("genre", "country_id")`);
-    }
+    // Create new indexes
+    await queryRunner.query(
+      `CREATE INDEX "IDX_band_genre_country_id" ON "band" ("genre", "country_id")`,
+    );
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        // Remove foreign key constraints
-        await queryRunner.query(`ALTER TABLE "band" DROP CONSTRAINT IF EXISTS "FK_band_country"`);
-        await queryRunner.query(`ALTER TABLE "event" DROP CONSTRAINT IF EXISTS "FK_event_country"`);
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // Remove foreign key constraints
+    await queryRunner.query(
+      `ALTER TABLE "band" DROP CONSTRAINT IF EXISTS "FK_band_country"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "event" DROP CONSTRAINT IF EXISTS "FK_event_country"`,
+    );
 
-        // Drop new indexes
-        await queryRunner.query(`DROP INDEX IF EXISTS "IDX_band_genre_country_id"`);
+    // Drop new indexes
+    await queryRunner.query(`DROP INDEX IF EXISTS "IDX_band_genre_country_id"`);
 
-        // Remove country_id columns
-        await queryRunner.query(`ALTER TABLE "band" DROP COLUMN IF EXISTS "country_id"`);
-        await queryRunner.query(`ALTER TABLE "event" DROP COLUMN IF EXISTS "country_id"`);
+    // Remove country_id columns
+    await queryRunner.query(
+      `ALTER TABLE "band" DROP COLUMN IF EXISTS "country_id"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "event" DROP COLUMN IF EXISTS "country_id"`,
+    );
 
-        // Drop Country table indexes
-        await queryRunner.query(`DROP INDEX IF EXISTS "IDX_country_code"`);
-        await queryRunner.query(`DROP INDEX IF EXISTS "IDX_country_name"`);
+    // Drop Country table indexes
+    await queryRunner.query(`DROP INDEX IF EXISTS "IDX_country_code"`);
+    await queryRunner.query(`DROP INDEX IF EXISTS "IDX_country_name"`);
 
-        // Drop Country table
-        await queryRunner.query(`DROP TABLE IF EXISTS "country"`);
-    }
+    // Drop Country table
+    await queryRunner.query(`DROP TABLE IF EXISTS "country"`);
+  }
 }

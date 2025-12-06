@@ -1,13 +1,13 @@
-import { 
-  Entity, 
-  PrimaryGeneratedColumn, 
-  Column, 
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
   JoinColumn,
-  Index
+  Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Band } from '../../bands/entities/band.entity';
@@ -52,10 +52,10 @@ export class Event {
     enum: ['Concert', 'Festival', 'Tour', 'Recording', 'Interview', 'Other'],
     default: 'Concert',
   })
-  @Column({ 
+  @Column({
     type: 'enum',
     enum: ['Concert', 'Festival', 'Tour', 'Recording', 'Interview', 'Other'],
-    default: 'Concert'
+    default: 'Concert',
   })
   eventType: string;
 
@@ -79,7 +79,7 @@ export class Event {
 
   @ApiProperty({
     description: 'Ticket price for the event',
-    example: 89.50,
+    example: 89.5,
     required: false,
   })
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
@@ -130,7 +130,7 @@ export class Event {
   })
   @ManyToOne(() => Band, (band) => band.events, {
     onDelete: 'CASCADE',
-    nullable: false
+    nullable: false,
   })
   @JoinColumn({ name: 'band_id' })
   band: Band;
@@ -142,7 +142,7 @@ export class Event {
   })
   @ManyToOne(() => Country, (country) => country.events, {
     onDelete: 'CASCADE',
-    nullable: true
+    nullable: true,
   })
   @JoinColumn({ name: 'country_id' })
   country: Country;

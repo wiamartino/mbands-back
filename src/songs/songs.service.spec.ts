@@ -32,7 +32,9 @@ describe('SongsService', () => {
     }).compile();
 
     service = module.get<SongsService>(SongsService);
-    repository = module.get<Repository<Song>>(getRepositoryToken(Song)) as jest.Mocked<Repository<Song>>;
+    repository = module.get<Repository<Song>>(
+      getRepositoryToken(Song),
+    ) as jest.Mocked<Repository<Song>>;
   });
 
   it('should be defined', () => {
@@ -51,7 +53,7 @@ describe('SongsService', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       band: null,
-      albums: []
+      albums: [],
     } as Song;
     repository.create.mockReturnValue(songEntity);
     repository.save.mockResolvedValue(songEntity);
@@ -64,8 +66,22 @@ describe('SongsService', () => {
 
   it('should find all songs', async () => {
     const songs = [
-      { id: 1, title: 'Song 1', createdAt: new Date(), updatedAt: new Date(), band: null, albums: [] } as Song,
-      { id: 2, title: 'Song 2', createdAt: new Date(), updatedAt: new Date(), band: null, albums: [] } as Song
+      {
+        id: 1,
+        title: 'Song 1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        band: null,
+        albums: [],
+      } as Song,
+      {
+        id: 2,
+        title: 'Song 2',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        band: null,
+        albums: [],
+      } as Song,
     ];
     repository.find.mockResolvedValue(songs);
 
@@ -81,7 +97,7 @@ describe('SongsService', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
       band: null,
-      albums: []
+      albums: [],
     } as Song;
     repository.findOne.mockResolvedValue(song);
 
@@ -102,7 +118,11 @@ describe('SongsService', () => {
 
   it('should update a song', async () => {
     const dto: UpdateSongDto = { title: 'Updated Title' };
-    repository.update.mockResolvedValue({ affected: 1, generatedMaps: [], raw: [] });
+    repository.update.mockResolvedValue({
+      affected: 1,
+      generatedMaps: [],
+      raw: [],
+    });
 
     const result = await service.update(1, dto);
     expect(repository.update).toHaveBeenCalledWith(1, dto);
@@ -110,7 +130,11 @@ describe('SongsService', () => {
   });
 
   it('should remove a song', async () => {
-    repository.softDelete.mockResolvedValue({ affected: 1, raw: [], generatedMaps: [] });
+    repository.softDelete.mockResolvedValue({
+      affected: 1,
+      raw: [],
+      generatedMaps: [],
+    });
 
     await service.remove(1);
     expect(repository.softDelete).toHaveBeenCalledWith(1);
