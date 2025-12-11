@@ -11,7 +11,12 @@ import {
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto, AuthResponseDto } from './dto';
+import {
+  LoginDto,
+  RegisterDto,
+  AuthResponseDto,
+  RefreshTokenDto,
+} from './dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -93,5 +98,18 @@ export class AuthController {
       }
       throw new BadRequestException('Registration failed');
     }
+  }
+
+  @ApiOperation({ summary: 'Refresh access token' })
+  @ApiResponse({ status: 200, description: 'Tokens refreshed', type: AuthResponseDto })
+  @ApiResponse({ status: 401, description: 'Invalid or expired refresh token' })
+  @ApiBody({ type: RefreshTokenDto })
+  @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  @Post('refresh')
+  async refresh(
+    @Body() refreshTokenDto: RefreshTokenDto,
+  ): Promise<AuthResponseDto> {
+    return this.authService.refreshTokens(refreshTokenDto.refresh_token);
   }
 }

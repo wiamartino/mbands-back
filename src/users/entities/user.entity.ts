@@ -35,6 +35,14 @@ export class User {
   @Column({ length: 255 })
   password: string;
 
+  @ApiHideProperty()
+  @Column({ nullable: true, length: 500 })
+  refreshTokenHash?: string;
+
+  @ApiHideProperty()
+  @Column({ nullable: true })
+  refreshTokenExpiresAt?: Date;
+
   @ApiProperty({
     description: 'Email address',
     example: 'john.doe@example.com',

@@ -36,4 +36,15 @@ export class UsersService {
       lastLoginAt: new Date(),
     });
   }
+
+  async updateRefreshToken(
+    userId: number,
+    refreshTokenHash: string | null,
+    refreshTokenExpiresAt?: Date | null,
+  ): Promise<void> {
+    await this.usersRepository.update(userId, {
+      refreshTokenHash,
+      refreshTokenExpiresAt: refreshTokenExpiresAt ?? null,
+    });
+  }
 }
