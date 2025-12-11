@@ -106,7 +106,7 @@ describe('BandsService', () => {
       ];
       mockBandsRepository.find.mockResolvedValue(mockBands);
 
-      const result = await service.findAll(1, 10);
+      const result = await service.findAll({ page: 1, limit: 10 });
 
       expect(mockBandsRepository.find).toHaveBeenCalledWith({
         skip: 0,

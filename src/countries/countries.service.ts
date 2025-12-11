@@ -4,6 +4,8 @@ import { UpdateCountryDto } from './dto/update-country.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Country } from './entities/country.entity';
 import { Repository, UpdateResult } from 'typeorm';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { buildPaginationParams } from '../common/pagination';
 
 @Injectable()
 export class CountriesService {
@@ -17,10 +19,12 @@ export class CountriesService {
     return this.countriesRepository.save(country);
   }
 
-  async findAll(page: number = 1, limit: number = 10): Promise<Country[]> {
+  async findAll(pagination?: PaginationQueryDto): Promise<Country[]> {
+    const { skip, take } = buildPaginationParams(pagination);
+
     return this.countriesRepository.find({
-      skip: (page - 1) * limit,
-      take: limit,
+      skip,
+      take,
       relations: {
         bands: {
           albums: true,

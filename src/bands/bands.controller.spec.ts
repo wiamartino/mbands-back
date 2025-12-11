@@ -57,7 +57,9 @@ describe('BandsController', () => {
     it('should call service.findAll with default params', async () => {
       (service.findAll as jest.Mock).mockResolvedValue([]);
       expect(await controller.findAll()).toEqual([]);
-      expect(service.findAll).toHaveBeenCalledWith(1, 10);
+      expect(service.findAll).toHaveBeenCalledWith(
+        expect.objectContaining({ page: 1, limit: 10 }),
+      );
     });
   });
 

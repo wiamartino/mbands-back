@@ -4,6 +4,8 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { buildPaginationParams } from '../common/pagination';
 
 @Injectable()
 export class AlbumsService {
@@ -17,8 +19,12 @@ export class AlbumsService {
     return this.albumsRepository.save(band);
   }
 
-  async findAll(): Promise<Album[]> {
+  async findAll(pagination?: PaginationQueryDto): Promise<Album[]> {
+    const { skip, take } = buildPaginationParams(pagination);
+
     return this.albumsRepository.find({
+      skip,
+      take,
       relations: {
         band: true,
         songs: true,

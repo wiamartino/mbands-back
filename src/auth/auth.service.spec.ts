@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { ConflictException, BadRequestException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from './auth.service';
 import { UsersService } from '../users/users.service';
@@ -14,6 +15,7 @@ describe('AuthService', () => {
   let service: AuthService;
   let usersService: UsersService;
   let jwtService: JwtService;
+  let configService: ConfigService;
 
   const mockUser = {
     userId: 1,
@@ -34,10 +36,25 @@ describe('AuthService', () => {
     findOne: jest.fn(),
     findByEmail: jest.fn(),
     create: jest.fn(),
+    findById: jest.fn(),
+    updateRefreshToken: jest.fn(),
+    updateLastLogin: jest.fn(),
   };
 
   const mockJwtService = {
     sign: jest.fn(),
+    decode: jest.fn(),
+    verify: jest.fn(),
+  };
+
+  const mockConfigService = {
+    get: jest.fn((key: string) => {
+      if (key === 'JWT_SECRET') return 'jwt-secret';
+      if (key === 'JWT_REFRESH_SECRET') return 'refresh-secret';
+      if (key === 'JWT_ACCESS_EXPIRES_IN') return '15m';
+      if (key === 'JWT_REFRESH_EXPIRES_IN') return '7d';
+      return undefined;
+    }),
   };
 
   beforeEach(async () => {
@@ -52,12 +69,17 @@ describe('AuthService', () => {
           provide: JwtService,
           useValue: mockJwtService,
         },
+        {
+          provide: ConfigService,
+          useValue: mockConfigService,
+        },
       ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
     usersService = module.get<UsersService>(UsersService);
     jwtService = module.get<JwtService>(JwtService);
+    configService = module.get<ConfigService>(ConfigService);
   });
 
   afterEach(() => {
@@ -83,16 +105,6 @@ describe('AuthService', () => {
       expect(result).toEqual(mockUser);
     });
 
-    it('should return user for valid credentials with plain text (fallback)', async () => {
-      const userWithPlainPassword = { ...mockUser, password: 'password123' };
-      mockUsersService.findOne.mockResolvedValue(userWithPlainPassword);
-
-      const result = await service.validateUser('testuser', 'password123');
-
-      expect(usersService.findOne).toHaveBeenCalledWith('testuser');
-      expect(result).toEqual(userWithPlainPassword);
-    });
-
     it('should return null for non-existent user', async () => {
       mockUsersService.findOne.mockResolvedValue(null);
 
@@ -113,18 +125,32 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('should return access token and user data', async () => {
-      const mockToken = 'jwt-token';
-      mockJwtService.sign.mockReturnValue(mockToken);
+      mockJwtService.sign
+        .mockReturnValueOnce('access-token')
+        .mockReturnValueOnce('refresh-token');
+      mockJwtService.decode.mockReturnValue({
+        exp: Math.floor(Date.now() / 1000) + 3600,
+      });
+      mockedBcrypt.hash.mockResolvedValue('hashed-refresh' as never);
 
       const result = await service.login(mockUser);
 
-      expect(jwtService.sign).toHaveBeenCalledWith({
+      expect(jwtService.sign).toHaveBeenNthCalledWith(1, {
         sub: mockUser.userId,
         username: mockUser.username,
         email: mockUser.email,
-      });
+      }, expect.any(Object));
+      expect(jwtService.sign).toHaveBeenCalledTimes(2);
+      expect(jwtService.decode).toHaveBeenCalledWith('refresh-token');
+      expect(usersService.updateRefreshToken).toHaveBeenCalledWith(
+        mockUser.userId,
+        'hashed-refresh',
+        expect.any(Date),
+      );
+      expect(usersService.updateLastLogin).toHaveBeenCalledWith(mockUser.userId);
       expect(result).toEqual({
-        access_token: mockToken,
+        access_token: 'access-token',
+        refresh_token: 'refresh-token',
         user: {
           id: mockUser.userId.toString(),
           username: mockUser.username,
@@ -151,8 +177,15 @@ describe('AuthService', () => {
       mockUsersService.findOne.mockResolvedValue(null);
       mockUsersService.findByEmail.mockResolvedValue(null);
       mockUsersService.create.mockResolvedValue(mockUser);
-      mockedBcrypt.hash.mockResolvedValue('hashedPassword' as never);
-      mockJwtService.sign.mockReturnValue('jwt-token');
+      mockedBcrypt.hash
+        .mockResolvedValueOnce('hashedPassword' as never)
+        .mockResolvedValueOnce('hashed-refresh' as never);
+      mockJwtService.sign
+        .mockReturnValueOnce('access-token')
+        .mockReturnValueOnce('refresh-token');
+      mockJwtService.decode.mockReturnValue({
+        exp: Math.floor(Date.now() / 1000) + 3600,
+      });
 
       const result = await service.register(registerDto);
 
@@ -167,7 +200,14 @@ describe('AuthService', () => {
         lastName: registerDto.lastName,
         isActive: true,
       });
-      expect(result).toHaveProperty('access_token');
+      expect(usersService.updateRefreshToken).toHaveBeenCalledWith(
+        mockUser.userId,
+        'hashed-refresh',
+        expect.any(Date),
+      );
+      expect(usersService.updateLastLogin).toHaveBeenCalledWith(mockUser.userId);
+      expect(result).toHaveProperty('access_token', 'access-token');
+      expect(result).toHaveProperty('refresh_token', 'refresh-token');
       expect(result).toHaveProperty('user');
     });
 
@@ -187,19 +227,6 @@ describe('AuthService', () => {
       await expect(service.register(registerDto)).rejects.toThrow(
         ConflictException,
       );
-    });
-  });
-
-  describe('generateToken', () => {
-    it('should generate JWT token', () => {
-      const payload = { sub: 1, username: 'test' };
-      const expectedToken = 'jwt-token';
-      mockJwtService.sign.mockReturnValue(expectedToken);
-
-      const result = service['generateToken'](payload);
-
-      expect(jwtService.sign).toHaveBeenCalledWith(payload);
-      expect(result).toBe(expectedToken);
     });
   });
 });

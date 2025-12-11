@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Controller('events')
 export class EventsController {
@@ -21,8 +23,10 @@ export class EventsController {
   }
 
   @Get()
-  findAll() {
-    return this.eventsService.findAll();
+  findAll(
+    @Query() pagination: PaginationQueryDto = new PaginationQueryDto(),
+  ) {
+    return this.eventsService.findAll(pagination);
   }
 
   @Get(':id')

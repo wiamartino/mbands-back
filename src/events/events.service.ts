@@ -4,6 +4,8 @@ import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entities/event.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { buildPaginationParams } from '../common/pagination';
 
 @Injectable()
 export class EventsService {
@@ -17,8 +19,14 @@ export class EventsService {
     return this.eventsRepository.save(event);
   }
 
-  findAll() {
-    return this.eventsRepository.find({ relations: ['band'] });
+  async findAll(pagination?: PaginationQueryDto) {
+    const { skip, take } = buildPaginationParams(pagination);
+
+    return this.eventsRepository.find({
+      skip,
+      take,
+      relations: ['band'],
+    });
   }
 
   findOne(id: number) {

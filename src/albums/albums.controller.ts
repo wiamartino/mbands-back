@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Controller('albums')
 export class AlbumsController {
@@ -21,8 +23,10 @@ export class AlbumsController {
   }
 
   @Get()
-  findAll() {
-    return this.albumsService.findAll();
+  findAll(
+    @Query() pagination: PaginationQueryDto = new PaginationQueryDto(),
+  ) {
+    return this.albumsService.findAll(pagination);
   }
 
   @Get(':id')

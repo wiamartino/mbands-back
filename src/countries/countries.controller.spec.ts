@@ -61,7 +61,9 @@ describe('CountriesController', () => {
       (service.findAll as jest.Mock).mockResolvedValue(expectedResult);
 
       expect(await controller.findAll()).toEqual(expectedResult);
-      expect(service.findAll).toHaveBeenCalledWith(1, 10);
+      expect(service.findAll).toHaveBeenCalledWith(
+        expect.objectContaining({ page: 1, limit: 10 }),
+      );
     });
   });
 

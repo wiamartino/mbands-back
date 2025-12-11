@@ -14,6 +14,7 @@ import { BandsService } from './bands.service';
 import { CreateBandDto } from './dto/create-band.dto';
 import { UpdateBandDto } from './dto/update-band.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Controller('bands')
 @UseGuards(JwtAuthGuard)
@@ -26,8 +27,10 @@ export class BandsController {
   }
 
   @Get()
-  async findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
-    return this.bandsService.findAll(+page, +limit);
+  async findAll(
+    @Query() pagination: PaginationQueryDto = new PaginationQueryDto(),
+  ) {
+    return this.bandsService.findAll(pagination);
   }
 
   @Get(':id')

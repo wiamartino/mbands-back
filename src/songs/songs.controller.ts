@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { CreateSongDto } from './dto/create-song.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Controller('songs')
 export class SongsController {
@@ -21,8 +23,10 @@ export class SongsController {
   }
 
   @Get()
-  findAll() {
-    return this.songsService.findAll();
+  findAll(
+    @Query() pagination: PaginationQueryDto = new PaginationQueryDto(),
+  ) {
+    return this.songsService.findAll(pagination);
   }
 
   @Get(':id')

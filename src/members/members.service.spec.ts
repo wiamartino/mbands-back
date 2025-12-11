@@ -69,9 +69,11 @@ describe('MembersService', () => {
       ];
       mockRepository.find.mockResolvedValue(members);
 
-      const result = await service.findAll();
+      const result = await service.findAll({ page: 1, limit: 10 });
 
       expect(mockRepository.find).toHaveBeenCalledWith({
+        skip: 0,
+        take: 10,
         relations: {
           band: {
             country: true,

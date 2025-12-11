@@ -4,6 +4,8 @@ import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { buildPaginationParams } from '../common/pagination';
 
 @Injectable()
 export class MembersService {
@@ -16,8 +18,12 @@ export class MembersService {
     return this.membersRepository.save(band);
   }
 
-  async findAll() {
+  async findAll(pagination?: PaginationQueryDto) {
+    const { skip, take } = buildPaginationParams(pagination);
+
     return this.membersRepository.find({
+      skip,
+      take,
       relations: {
         band: {
           country: true,

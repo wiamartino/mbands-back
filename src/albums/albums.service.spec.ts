@@ -48,8 +48,15 @@ describe('AlbumsService', () => {
 
   it('findAll() should call repository find', async () => {
     mockAlbumsRepository.find.mockResolvedValue([]);
-    const result = await service.findAll();
-    expect(mockAlbumsRepository.find).toHaveBeenCalled();
+    const result = await service.findAll({ page: 1, limit: 10 });
+    expect(mockAlbumsRepository.find).toHaveBeenCalledWith({
+      skip: 0,
+      take: 10,
+      relations: {
+        band: true,
+        songs: true,
+      },
+    });
     expect(result).toEqual([]);
   });
 

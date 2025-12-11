@@ -4,6 +4,8 @@ import { UpdateSongDto } from './dto/update-song.dto';
 import { Song } from './entities/song.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { buildPaginationParams } from '../common/pagination';
 
 @Injectable()
 export class SongsService {
@@ -16,8 +18,12 @@ export class SongsService {
     return this.songsRepository.save(newSong);
   }
 
-  findAll() {
+  async findAll(pagination?: PaginationQueryDto) {
+    const { skip, take } = buildPaginationParams(pagination);
+
     return this.songsRepository.find({
+      skip,
+      take,
       relations: {
         band: {
           country: true,

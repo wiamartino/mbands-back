@@ -66,9 +66,13 @@ describe('EventsService', () => {
       ];
       mockRepository.find.mockResolvedValue(mockEvents);
 
-      const result = await service.findAll();
+      const result = await service.findAll({ page: 1, limit: 10 });
 
-      expect(mockRepository.find).toHaveBeenCalledWith({ relations: ['band'] });
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        skip: 0,
+        take: 10,
+        relations: ['band'],
+      });
       expect(result).toEqual(mockEvents);
     });
   });

@@ -57,7 +57,9 @@ describe('MembersController', () => {
       mockMembersService.findAll.mockResolvedValue(result);
 
       expect(await controller.findAll()).toEqual(result);
-      expect(service.findAll).toHaveBeenCalled();
+      expect(service.findAll).toHaveBeenCalledWith(
+        expect.objectContaining({ page: 1, limit: 10 }),
+      );
     });
   });
 

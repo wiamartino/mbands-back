@@ -14,6 +14,7 @@ import { CountriesService } from './countries.service';
 import { CreateCountryDto } from './dto/create-country.dto';
 import { UpdateCountryDto } from './dto/update-country.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Controller('countries')
 @UseGuards(JwtAuthGuard)
@@ -26,8 +27,10 @@ export class CountriesController {
   }
 
   @Get()
-  findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
-    return this.countriesService.findAll(+page, +limit);
+  findAll(
+    @Query() pagination: PaginationQueryDto = new PaginationQueryDto(),
+  ) {
+    return this.countriesService.findAll(pagination);
   }
 
   @Get('search/name/:name')

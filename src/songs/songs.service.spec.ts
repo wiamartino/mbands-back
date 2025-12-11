@@ -85,8 +85,19 @@ describe('SongsService', () => {
     ];
     repository.find.mockResolvedValue(songs);
 
-    const result = await service.findAll();
-    expect(repository.find).toHaveBeenCalled();
+    const result = await service.findAll({ page: 1, limit: 10 });
+    expect(repository.find).toHaveBeenCalledWith({
+      skip: 0,
+      take: 10,
+      relations: {
+        band: {
+          country: true,
+        },
+        albums: {
+          band: true,
+        },
+      },
+    });
     expect(result).toEqual(songs);
   });
 
