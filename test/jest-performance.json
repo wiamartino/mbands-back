@@ -1,0 +1,16 @@
+{
+  "displayName": "performance",
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": "(performance\\.(e2e-|unit-)?spec)\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "collectCoverageFrom": ["**/*.(t|j)s"],
+  "coverageDirectory": "../coverage",
+  "testTimeout": 60000,
+  "collectCoverage": false,
+  "maxWorkers": 1,
+  "verbose": true
+}
