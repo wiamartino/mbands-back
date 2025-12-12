@@ -15,15 +15,18 @@ config();
 
 const configService = new ConfigService();
 
+const databaseUrl = configService.get<string>('DATABASE_URL');
+
 export default new DataSource({
   type: 'postgres',
-  host: configService.get('DB_HOST') || 'localhost',
-  port: configService.get('DB_PORT') || 5432,
-  username: configService.get('DB_USERNAME') || 'postgres',
-  password: configService.get('DB_PASSWORD') || 'password',
-  database: configService.get('DB_NAME') || 'mbands',
+  url: databaseUrl,
+  host: databaseUrl ? undefined : configService.get('DB_HOST') || 'localhost',
+  port: databaseUrl ? undefined : Number(configService.get('DB_PORT')) || 5432,
+  username: databaseUrl ? undefined : configService.get('DB_USERNAME') || 'postgres',
+  password: databaseUrl ? undefined : configService.get('DB_PASSWORD') || 'password',
+  database: databaseUrl ? undefined : configService.get('DB_NAME') || 'mbands',
   entities: [Band, Member, Album, Song, User, Role, Event, Country],
   migrations: ['src/migrations/**/*{.ts,.js}'],
-  synchronize: false, // Set to false for production
-  logging: true,
+  synchronize: false,
+  logging: process.env.NODE_ENV !== 'production',
 });

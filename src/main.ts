@@ -2,17 +2,31 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import helmet from 'helmet';
+import compression from 'compression';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { Logger } from 'nestjs-pino';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(Logger));
+
+  // Global prefix for APIs
+  app.setGlobalPrefix('v1');
+
+  // Enable graceful shutdown hooks
+  app.enableShutdownHooks();
 
   // Global logging interceptor
   app.useGlobalInterceptors(new LoggingInterceptor());
 
   // Global exception filter
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Global rate limiter guard
+  app.useGlobalGuards(new ThrottlerGuard());
 
   // Global validation pipe
   app.useGlobalPipes(
@@ -29,6 +43,12 @@ async function bootstrap() {
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,
   });
+
+  // Security headers
+  app.use(helmet());
+
+  // Response compression
+  app.use(compression());
 
   // Swagger configuration
   const config = new DocumentBuilder()
@@ -49,10 +69,12 @@ async function bootstrap() {
     .addTag('Songs', 'Song management operations')
     .addTag('Members', 'Member management operations')
     .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  if (process.env.NODE_ENV !== 'production') {
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
+  }
 
-  const port = process.env.PORT || 3000;
+  const port = Number(process.env.PORT) || 3000;
   await app.listen(port);
   console.log(`Application is running on: http://localhost:${port}`);
   console.log(`Swagger documentation: http://localhost:${port}/api`);
