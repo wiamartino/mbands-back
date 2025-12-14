@@ -7,9 +7,34 @@ import compression from 'compression';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { Logger } from 'nestjs-pino';
+import * as fs from 'fs';
+import * as https from 'https';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  let app;
+  
+  // Setup HTTPS if enabled
+  const httpsEnabled = process.env.HTTPS_ENABLED === 'true';
+  if (httpsEnabled) {
+    const certPath = process.env.SSL_CERT_PATH || './certs/certificate.pem';
+    const keyPath = process.env.SSL_KEY_PATH || './certs/private-key.pem';
+    
+    if (fs.existsSync(certPath) && fs.existsSync(keyPath)) {
+      const httpsOptions = {
+        key: fs.readFileSync(keyPath),
+        cert: fs.readFileSync(certPath),
+      };
+      app = await NestFactory.create(AppModule, {
+        httpsOptions,
+        bufferLogs: true,
+      });
+    } else {
+      console.warn(`SSL certificates not found at ${certPath} and ${keyPath}. Running in HTTP mode.`);
+      app = await NestFactory.create(AppModule, { bufferLogs: true });
+    }
+  } else {
+    app = await NestFactory.create(AppModule, { bufferLogs: true });
+  }
   app.useLogger(app.get(Logger));
 
   // Global prefix for APIs
@@ -72,7 +97,8 @@ async function bootstrap() {
 
   const port = Number(process.env.PORT) || 3000;
   await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}`);
-  console.log(`Swagger documentation: http://localhost:${port}/api`);
+  const protocol = httpsEnabled ? 'https' : 'http';
+  console.log(`Application is running on: ${protocol}://localhost:${port}`);
+  console.log(`Swagger documentation: ${protocol}://localhost:${port}/api`);
 }
 bootstrap();

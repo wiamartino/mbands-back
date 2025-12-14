@@ -16,8 +16,8 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Expose the port the app runs on
-EXPOSE 3000
+# Expose both HTTP and HTTPS ports
+EXPOSE 3000 3443
 
 # Define the command to run the application
 CMD ["npm", "run", "start:prod"]
