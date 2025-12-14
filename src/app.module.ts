@@ -45,19 +45,74 @@ import { Country } from './countries/entities/country.entity';
       },
     ]),
     TypeOrmModule.forRootAsync({
-      useFactory: () => ({
-        type: 'postgres',
-        url: process.env.DATABASE_URL,
-        entities: [Band, Member, Album, Song, User, Role, Event, Country],
-        synchronize: false,
-        logging: process.env.NODE_ENV !== 'production',
-        extra: {
-          max: Number(process.env.DB_POOL_MAX) || 10,
-          min: Number(process.env.DB_POOL_MIN) || 2,
-          idleTimeoutMillis: Number(process.env.DB_POOL_IDLE) || 30000,
-          connectionTimeoutMillis: Number(process.env.DB_POOL_TIMEOUT) || 5000,
-        },
-      }),
+      useFactory: () => {
+        const isProduction = process.env.NODE_ENV === 'production';
+        const isTest = process.env.NODE_ENV === 'test';
+
+        return {
+          type: 'postgres',
+          url: process.env.DATABASE_URL,
+          entities: [Band, Member, Album, Song, User, Role, Event, Country],
+          synchronize: false,
+          logging: !isProduction && !isTest,
+          // Log only errors in production
+          logger: isProduction ? 'advanced-console' : 'advanced-console',
+          // Connection pool configuration
+          extra: {
+            // Maximum number of clients in the pool
+            // Production: 20-50 depending on load, Development: 10
+            max: Number(process.env.DB_POOL_MAX) || (isProduction ? 30 : 10),
+            
+            // Minimum number of clients in the pool
+            // Keep connections warm for faster queries
+            min: Number(process.env.DB_POOL_MIN) || (isProduction ? 5 : 2),
+            
+            // Close idle clients after 30 seconds (production) or 10 seconds (dev)
+            idleTimeoutMillis: Number(process.env.DB_POOL_IDLE) ||
+              (isProduction ? 30000 : 10000),
+            
+            // Return an error after 10 seconds if connection cannot be established
+            connectionTimeoutMillis: Number(process.env.DB_POOL_TIMEOUT) || 10000,
+            
+            // Number of times to retry connecting
+            maxUses: Number(process.env.DB_POOL_MAX_USES) || 7500,
+            
+            // Allow idle clients to be closed
+            allowExitOnIdle: !isProduction,
+            
+            // Enable keep-alive to detect broken connections
+            keepAlive: true,
+            keepAliveInitialDelayMillis: 10000,
+            
+            // Query timeout (30 seconds)
+            statement_timeout: Number(process.env.DB_STATEMENT_TIMEOUT) || 30000,
+            
+            // Application name for easier monitoring in pg_stat_activity
+            application_name: process.env.DB_APP_NAME || 'mbands-api',
+            
+            // SSL configuration for production
+            ...(isProduction && process.env.DB_SSL === 'true'
+              ? {
+                  ssl: {
+                    rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
+                    ca: process.env.DB_SSL_CA,
+                    key: process.env.DB_SSL_KEY,
+                    cert: process.env.DB_SSL_CERT,
+                  },
+                }
+              : {}),
+          },
+          // Retry connection attempts
+          retryAttempts: Number(process.env.DB_RETRY_ATTEMPTS) || 10,
+          retryDelay: Number(process.env.DB_RETRY_DELAY) || 3000,
+          // Auto-load entities
+          autoLoadEntities: true,
+          // Connection pool eviction
+          maxQueryExecutionTime: isProduction
+            ? Number(process.env.DB_MAX_QUERY_TIME) || 5000
+            : 10000,
+        };
+      },
     }),
     HealthModule,
     BandsModule,
