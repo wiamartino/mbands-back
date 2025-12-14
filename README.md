@@ -40,13 +40,21 @@ $ npm run test:cov
 
 ## Improvements Summary
 - Security: helmet, CORS, global validation pipe, exception filter.
-- Performance: compression, graceful shutdown.
+- Performance: compression, graceful shutdown, optimized database connection pooling.
 - Stability: Global API prefix `v1`, Swagger disabled in production.
 - Rate limiting: ThrottlerModule + global ThrottlerGuard.
 - Observability: `/v1/health` endpoint (DB ping via Terminus).
 - Logging: Structured JSON logs via `nestjs-pino`.
 - Testing: Coverage thresholds, e2e health test and DB setup.
 - DB Config: Unified TypeOrmModule and migration DataSource using `DATABASE_URL`.
+- Repository Pattern: Consistent custom repositories across all modules with optimized queries.
+
+## Database Configuration
+- **Connection Pooling:** Production-optimized pool settings with environment-specific configurations
+- **SSL Support:** Optional SSL/TLS encryption for production databases
+- **Query Monitoring:** Automatic logging of slow queries and connection issues
+- **Auto-Retry:** Configurable reconnection attempts with exponential backoff
+- See [DATABASE_POOL_CONFIG.md](DATABASE_POOL_CONFIG.md) for detailed configuration guide
 
 ## Environment Variables
 Required (validated at startup):
@@ -56,10 +64,16 @@ Required (validated at startup):
 - JWT_SECRET (min length 16)
 - DATABASE_URL (Postgres connection string)
 
-Optional for local/docker:
-- DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME
+Optional database pool configuration:
+- DB_POOL_MAX (default: 10 dev, 30 prod)
+- DB_POOL_MIN (default: 2 dev, 5 prod)
+- DB_POOL_IDLE (default: 10000ms dev, 30000ms prod)
+- DB_POOL_TIMEOUT (default: 10000ms)
+- DB_STATEMENT_TIMEOUT (default: 30000ms)
+- DB_RETRY_ATTEMPTS (default: 10)
+- DB_SSL (default: false, set `true` for production)
 
-Test env example: see [.env.test](.env.test).
+See [.env.example](.env.example) for all available options.
 
 ## Health Check
 - Endpoint: `GET /v1/health`
