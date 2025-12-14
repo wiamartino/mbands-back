@@ -1,18 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCountryDto } from './dto/create-country.dto';
 import { UpdateCountryDto } from './dto/update-country.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Country } from './entities/country.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { UpdateResult } from 'typeorm';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { buildPaginationParams } from '../common/pagination';
+import { CountriesRepository } from './countries.repository';
 
 @Injectable()
 export class CountriesService {
-  constructor(
-    @InjectRepository(Country)
-    private readonly countriesRepository: Repository<Country>,
-  ) {}
+  constructor(private readonly countriesRepository: CountriesRepository) {}
 
   async create(createCountryDto: CreateCountryDto): Promise<Country> {
     const country = this.countriesRepository.create(createCountryDto);
@@ -21,36 +18,11 @@ export class CountriesService {
 
   async findAll(pagination?: PaginationQueryDto): Promise<Country[]> {
     const { skip, take } = buildPaginationParams(pagination);
-
-    return this.countriesRepository.find({
-      skip,
-      take,
-      relations: {
-        bands: {
-          albums: true,
-          members: true,
-        },
-        events: {
-          band: true,
-        },
-      },
-      where: { isActive: true },
-    });
+    return this.countriesRepository.findAllActive(skip, take);
   }
 
   async findOne(id: number): Promise<Country> {
-    const country = await this.countriesRepository.findOne({
-      where: { id, isActive: true },
-      relations: {
-        bands: {
-          albums: true,
-          members: true,
-        },
-        events: {
-          band: true,
-        },
-      },
-    });
+    const country = await this.countriesRepository.findOneActive(id);
 
     if (!country) {
       throw new NotFoundException(`Country with ID ${id} not found`);
@@ -60,20 +32,11 @@ export class CountriesService {
   }
 
   async findByCode(code: string): Promise<Country> {
-    const country = await this.countriesRepository.findOne({
-      where: { code: code.toUpperCase(), isActive: true },
-      relations: {
-        bands: {
-          albums: true,
-          members: true,
-        },
-        events: {
-          band: true,
-        },
-      },
-    });
+    const country = await this.countriesRepository.findByCode(
+      code.toUpperCase(),
+    );
 
-    if (!country) {
+    if (!country || !country.isActive) {
       throw new NotFoundException(`Country with code ${code} not found`);
     }
 
@@ -81,13 +44,7 @@ export class CountriesService {
   }
 
   async findByName(name: string): Promise<Country[]> {
-    return this.countriesRepository
-      .createQueryBuilder('country')
-      .where('country.name ILIKE :name', { name: `%${name}%` })
-      .andWhere('country.isActive = :isActive', { isActive: true })
-      .leftJoinAndSelect('country.bands', 'bands')
-      .leftJoinAndSelect('country.events', 'events')
-      .getMany();
+    return this.countriesRepository.searchByName(name);
   }
 
   async findByRegion(region: string): Promise<Country[]> {

@@ -4,32 +4,41 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Country } from './entities/country.entity';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
+import { CountriesRepository } from './countries.repository';
 
 describe('CountriesService', () => {
   let service: CountriesService;
-  let repository: Repository<Country>;
+  let repository: CountriesRepository;
+
+  const mockCountriesRepository = {
+    create: jest.fn(),
+    save: jest.fn(),
+    find: jest.fn(),
+    findOne: jest.fn(),
+    findOneActive: jest.fn(),
+    findAllActive: jest.fn(),
+    findByName: jest.fn(),
+    findByCode: jest.fn(),
+    searchByName: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+    softDelete: jest.fn(),
+    createQueryBuilder: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CountriesService,
         {
-          provide: getRepositoryToken(Country),
-          useValue: {
-            create: jest.fn(),
-            save: jest.fn(),
-            find: jest.fn(),
-            findOne: jest.fn(),
-            update: jest.fn(),
-            delete: jest.fn(),
-            createQueryBuilder: jest.fn(),
-          },
+          provide: CountriesRepository,
+          useValue: mockCountriesRepository,
         },
       ],
     }).compile();
 
     service = module.get<CountriesService>(CountriesService);
-    repository = module.get<Repository<Country>>(getRepositoryToken(Country));
+    repository = module.get<CountriesRepository>(CountriesRepository);
   });
 
   it('should be defined', () => {
@@ -48,37 +57,30 @@ describe('CountriesService', () => {
       };
       const country = { id: 1, ...createCountryDto };
 
-      jest.spyOn(repository, 'create').mockReturnValue(country as Country);
-      jest.spyOn(repository, 'save').mockResolvedValue(country as Country);
+      mockCountriesRepository.create.mockReturnValue(country as Country);
+      mockCountriesRepository.save.mockResolvedValue(country as Country);
 
       expect(await service.create(createCountryDto)).toEqual(country);
-      expect(repository.create).toHaveBeenCalledWith(createCountryDto);
-      expect(repository.save).toHaveBeenCalledWith(country);
+      expect(mockCountriesRepository.create).toHaveBeenCalledWith(
+        createCountryDto,
+      );
+      expect(mockCountriesRepository.save).toHaveBeenCalledWith(country);
     });
   });
 
   describe('findOne', () => {
     it('should return a country when found', async () => {
       const country = { id: 1, name: 'Argentina', isActive: true };
-      jest.spyOn(repository, 'findOne').mockResolvedValue(country as Country);
+      mockCountriesRepository.findOneActive.mockResolvedValue(
+        country as Country,
+      );
 
       expect(await service.findOne(1)).toEqual(country);
-      expect(repository.findOne).toHaveBeenCalledWith({
-        where: { id: 1, isActive: true },
-        relations: {
-          bands: {
-            albums: true,
-            members: true,
-          },
-          events: {
-            band: true,
-          },
-        },
-      });
+      expect(mockCountriesRepository.findOneActive).toHaveBeenCalledWith(1);
     });
 
     it('should throw NotFoundException when country not found', async () => {
-      jest.spyOn(repository, 'findOne').mockResolvedValue(null);
+      mockCountriesRepository.findOneActive.mockResolvedValue(null);
 
       await expect(service.findOne(1)).rejects.toThrow(NotFoundException);
     });

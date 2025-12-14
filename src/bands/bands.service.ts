@@ -7,12 +7,12 @@ import { Country } from '../countries/entities/country.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { buildPaginationParams } from '../common/pagination';
+import { BandsRepository } from './bands.repository';
 
 @Injectable()
 export class BandsService {
   constructor(
-    @InjectRepository(Band)
-    private readonly bandsRepository: Repository<Band>,
+    private readonly bandsRepository: BandsRepository,
     @InjectRepository(Country)
     private readonly countriesRepository: Repository<Country>,
   ) {}
@@ -35,35 +35,11 @@ export class BandsService {
 
   async findAll(pagination?: PaginationQueryDto): Promise<Band[]> {
     const { skip, take } = buildPaginationParams(pagination);
-
-    return this.bandsRepository.find({
-      skip,
-      take,
-      relations: {
-        country: true,
-        members: true,
-        albums: {
-          songs: true,
-        },
-        events: true,
-        songs: true,
-      },
-    });
+    return this.bandsRepository.findAllWithRelations(skip, take);
   }
 
   async findOne(id: number): Promise<Band> {
-    return this.bandsRepository.findOne({
-      where: { id },
-      relations: {
-        country: true,
-        members: true,
-        albums: {
-          songs: true,
-        },
-        events: true,
-        songs: true,
-      },
-    });
+    return this.bandsRepository.findOneWithRelations(id);
   }
 
   async update(id: number, updateBandDto: UpdateBandDto): Promise<Band> {
@@ -76,41 +52,22 @@ export class BandsService {
   }
 
   async searchByName(name: string): Promise<Band[]> {
-    return this.bandsRepository.find({
-      where: { name: name },
-      relations: ['members', 'albums'],
-    });
+    return this.bandsRepository.findByNamePattern(name);
   }
 
   async searchByFirstLetter(firstLetter: string): Promise<Band[]> {
-    return this.bandsRepository
-      .createQueryBuilder('band')
-      .where('band.name LIKE :firstLetter', { firstLetter: `${firstLetter}%` })
-      .getMany();
+    return this.bandsRepository.findByFirstLetter(firstLetter);
   }
 
   async findByGenre(genre: string): Promise<Band[]> {
-    return this.bandsRepository.find({
-      where: { genre },
-      relations: ['members', 'albums'],
-    });
+    return this.bandsRepository.findByGenre(genre);
   }
 
   async findByYear(year: number): Promise<Band[]> {
-    return this.bandsRepository.find({
-      where: { yearFormed: year },
-      relations: ['members', 'albums'],
-    });
+    return this.bandsRepository.findByYear(year);
   }
 
   async findByCountry(countryName: string): Promise<Band[]> {
-    return this.bandsRepository.find({
-      where: {
-        country: {
-          name: countryName,
-        },
-      },
-      relations: ['members', 'albums', 'country'],
-    });
+    return this.bandsRepository.findByCountry(countryName);
   }
 }
