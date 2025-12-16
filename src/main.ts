@@ -3,7 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
-import compression from 'compression';
+import * as compression from 'compression';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { Logger } from 'nestjs-pino';
@@ -12,13 +12,13 @@ import * as https from 'https';
 
 async function bootstrap() {
   let app;
-  
+
   // Setup HTTPS if enabled
   const httpsEnabled = process.env.HTTPS_ENABLED === 'true';
   if (httpsEnabled) {
     const certPath = process.env.SSL_CERT_PATH || './certs/certificate.pem';
     const keyPath = process.env.SSL_KEY_PATH || './certs/private-key.pem';
-    
+
     if (fs.existsSync(certPath) && fs.existsSync(keyPath)) {
       const httpsOptions = {
         key: fs.readFileSync(keyPath),
@@ -35,7 +35,7 @@ async function bootstrap() {
   } else {
     app = await NestFactory.create(AppModule, { bufferLogs: true });
   }
-  app.useLogger(app.get(Logger));
+  // app.useLogger(app.get(Logger)); // Commented out - LoggerModule not configured
 
   // Global prefix for APIs
   app.setGlobalPrefix('v1');
