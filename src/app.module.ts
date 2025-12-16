@@ -53,7 +53,7 @@ import { Country } from './countries/entities/country.entity';
           type: 'postgres',
           url: process.env.DATABASE_URL,
           entities: [Band, Member, Album, Song, User, Role, Event, Country],
-          synchronize: false,
+          synchronize: isTest, // Enable auto-sync for tests, disable for dev/prod
           logging: !isProduction && !isTest,
           // Log only errors in production
           logger: isProduction ? 'advanced-console' : 'advanced-console',
@@ -62,44 +62,44 @@ import { Country } from './countries/entities/country.entity';
             // Maximum number of clients in the pool
             // Production: 20-50 depending on load, Development: 10
             max: Number(process.env.DB_POOL_MAX) || (isProduction ? 30 : 10),
-            
+
             // Minimum number of clients in the pool
             // Keep connections warm for faster queries
             min: Number(process.env.DB_POOL_MIN) || (isProduction ? 5 : 2),
-            
+
             // Close idle clients after 30 seconds (production) or 10 seconds (dev)
             idleTimeoutMillis: Number(process.env.DB_POOL_IDLE) ||
               (isProduction ? 30000 : 10000),
-            
+
             // Return an error after 10 seconds if connection cannot be established
             connectionTimeoutMillis: Number(process.env.DB_POOL_TIMEOUT) || 10000,
-            
+
             // Number of times to retry connecting
             maxUses: Number(process.env.DB_POOL_MAX_USES) || 7500,
-            
+
             // Allow idle clients to be closed
             allowExitOnIdle: !isProduction,
-            
+
             // Enable keep-alive to detect broken connections
             keepAlive: true,
             keepAliveInitialDelayMillis: 10000,
-            
+
             // Query timeout (30 seconds)
             statement_timeout: Number(process.env.DB_STATEMENT_TIMEOUT) || 30000,
-            
+
             // Application name for easier monitoring in pg_stat_activity
             application_name: process.env.DB_APP_NAME || 'mbands-api',
-            
+
             // SSL configuration for production
             ...(isProduction && process.env.DB_SSL === 'true'
               ? {
-                  ssl: {
-                    rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
-                    ca: process.env.DB_SSL_CA,
-                    key: process.env.DB_SSL_KEY,
-                    cert: process.env.DB_SSL_CERT,
-                  },
-                }
+                ssl: {
+                  rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
+                  ca: process.env.DB_SSL_CA,
+                  key: process.env.DB_SSL_KEY,
+                  cert: process.env.DB_SSL_CERT,
+                },
+              }
               : {}),
           },
           // Retry connection attempts
@@ -133,4 +133,4 @@ import { Country } from './countries/entities/country.entity';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

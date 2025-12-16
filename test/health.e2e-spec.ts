@@ -19,8 +19,8 @@ describe('Health (e2e)', () => {
     await app.close();
   });
 
-  it('/v1/health (GET) should return ok', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/health');
+  it('/health (GET) should return ok', async () => {
+    const res = await request(app.getHttpServer()).get('/health');
     expect(res.status).toBe(200);
     expect(res.body.status).toBe('ok');
     expect(Array.isArray(res.body.details ? Object.keys(res.body.details) : [])).toBe(true);
