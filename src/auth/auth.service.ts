@@ -142,8 +142,8 @@ export class AuthService {
   } {
     const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_SECRET'),
-      expiresIn:
-        (this.configService.get<string>('JWT_ACCESS_EXPIRES_IN') || '15m') as any,
+      expiresIn: (this.configService.get<string>('JWT_ACCESS_EXPIRES_IN') ||
+        '15m') as any,
     });
 
     const refreshSecret =
@@ -158,9 +158,7 @@ export class AuthService {
     });
 
     const decoded = this.jwtService.decode(refreshToken) as { exp?: number };
-    const refreshExpiresAt = decoded?.exp
-      ? new Date(decoded.exp * 1000)
-      : null;
+    const refreshExpiresAt = decoded?.exp ? new Date(decoded.exp * 1000) : null;
 
     return { accessToken, refreshToken, refreshExpiresAt };
   }

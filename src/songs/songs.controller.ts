@@ -23,9 +23,7 @@ export class SongsController {
   }
 
   @Get()
-  findAll(
-    @Query() pagination: PaginationQueryDto = new PaginationQueryDto(),
-  ) {
+  findAll(@Query() pagination: PaginationQueryDto = new PaginationQueryDto()) {
     return this.songsService.findAll(pagination);
   }
 

@@ -6,9 +6,7 @@ import {
 } from 'class-validator';
 
 @ValidatorConstraint({ async: false })
-export class IsStrongPasswordConstraint
-  implements ValidatorConstraintInterface
-{
+export class IsStrongPasswordConstraint implements ValidatorConstraintInterface {
   validate(password: string) {
     if (!password) return false;
 

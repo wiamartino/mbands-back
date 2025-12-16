@@ -11,12 +11,7 @@ import {
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
-import {
-  LoginDto,
-  RegisterDto,
-  AuthResponseDto,
-  RefreshTokenDto,
-} from './dto';
+import { LoginDto, RegisterDto, AuthResponseDto, RefreshTokenDto } from './dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -101,7 +96,11 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Refresh access token' })
-  @ApiResponse({ status: 200, description: 'Tokens refreshed', type: AuthResponseDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Tokens refreshed',
+    type: AuthResponseDto,
+  })
   @ApiResponse({ status: 401, description: 'Invalid or expired refresh token' })
   @ApiBody({ type: RefreshTokenDto })
   @HttpCode(HttpStatus.OK)

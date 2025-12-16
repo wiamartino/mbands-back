@@ -240,7 +240,9 @@ describe('LoggingInterceptor', () => {
     it('should handle request errors gracefully', (done) => {
       const errorSpy = jest.spyOn(Logger.prototype, 'error');
       const error = new BadRequestException('Test error');
-      mockCallHandler.handle = jest.fn().mockReturnValue(throwError(() => error));
+      mockCallHandler.handle = jest
+        .fn()
+        .mockReturnValue(throwError(() => error));
 
       interceptor.intercept(mockContext, mockCallHandler).subscribe({
         error: () => {
@@ -253,7 +255,9 @@ describe('LoggingInterceptor', () => {
     it('should include error message in error log', (done) => {
       const errorSpy = jest.spyOn(Logger.prototype, 'error');
       const error = new BadRequestException('Validation failed');
-      mockCallHandler.handle = jest.fn().mockReturnValue(throwError(() => error));
+      mockCallHandler.handle = jest
+        .fn()
+        .mockReturnValue(throwError(() => error));
 
       interceptor.intercept(mockContext, mockCallHandler).subscribe({
         error: () => {

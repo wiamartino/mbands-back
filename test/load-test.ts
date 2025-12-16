@@ -154,7 +154,10 @@ class LoadTester {
     }
   }
 
-  private printResults(result: LoadTestResult, statusCodes?: Record<number, number>): void {
+  private printResults(
+    result: LoadTestResult,
+    statusCodes?: Record<number, number>,
+  ): void {
     console.log(`   📈 Results:`);
     console.log(
       `   ├─ Success: ${result.successCount}/${result.totalRequests} (${((result.successCount / result.totalRequests) * 100).toFixed(1)}%)`,

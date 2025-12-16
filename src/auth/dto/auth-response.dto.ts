@@ -55,7 +55,7 @@ export class AuthResponseDto {
 
   @ApiProperty({
     description: 'JWT refresh token',
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
   })
   refresh_token: string;
 

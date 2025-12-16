@@ -68,11 +68,13 @@ import { Country } from './countries/entities/country.entity';
             min: Number(process.env.DB_POOL_MIN) || (isProduction ? 5 : 2),
 
             // Close idle clients after 30 seconds (production) or 10 seconds (dev)
-            idleTimeoutMillis: Number(process.env.DB_POOL_IDLE) ||
+            idleTimeoutMillis:
+              Number(process.env.DB_POOL_IDLE) ||
               (isProduction ? 30000 : 10000),
 
             // Return an error after 10 seconds if connection cannot be established
-            connectionTimeoutMillis: Number(process.env.DB_POOL_TIMEOUT) || 10000,
+            connectionTimeoutMillis:
+              Number(process.env.DB_POOL_TIMEOUT) || 10000,
 
             // Number of times to retry connecting
             maxUses: Number(process.env.DB_POOL_MAX_USES) || 7500,
@@ -85,7 +87,8 @@ import { Country } from './countries/entities/country.entity';
             keepAliveInitialDelayMillis: 10000,
 
             // Query timeout (30 seconds)
-            statement_timeout: Number(process.env.DB_STATEMENT_TIMEOUT) || 30000,
+            statement_timeout:
+              Number(process.env.DB_STATEMENT_TIMEOUT) || 30000,
 
             // Application name for easier monitoring in pg_stat_activity
             application_name: process.env.DB_APP_NAME || 'mbands-api',
@@ -93,13 +96,14 @@ import { Country } from './countries/entities/country.entity';
             // SSL configuration for production
             ...(isProduction && process.env.DB_SSL === 'true'
               ? {
-                ssl: {
-                  rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
-                  ca: process.env.DB_SSL_CA,
-                  key: process.env.DB_SSL_KEY,
-                  cert: process.env.DB_SSL_CERT,
-                },
-              }
+                  ssl: {
+                    rejectUnauthorized:
+                      process.env.DB_SSL_REJECT_UNAUTHORIZED !== 'false',
+                    ca: process.env.DB_SSL_CA,
+                    key: process.env.DB_SSL_KEY,
+                    cert: process.env.DB_SSL_CERT,
+                  },
+                }
               : {}),
           },
           // Retry connection attempts
@@ -133,4 +137,4 @@ import { Country } from './countries/entities/country.entity';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

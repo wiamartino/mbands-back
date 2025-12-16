@@ -23,6 +23,8 @@ describe('Health (e2e)', () => {
     const res = await request(app.getHttpServer()).get('/health');
     expect(res.status).toBe(200);
     expect(res.body.status).toBe('ok');
-    expect(Array.isArray(res.body.details ? Object.keys(res.body.details) : [])).toBe(true);
+    expect(
+      Array.isArray(res.body.details ? Object.keys(res.body.details) : []),
+    ).toBe(true);
   });
 });

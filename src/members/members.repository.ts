@@ -64,7 +64,9 @@ export class MembersRepository extends Repository<Member> {
    */
   async searchByName(pattern: string): Promise<Member[]> {
     return this.createQueryBuilder('member')
-      .where('LOWER(member.name) LIKE LOWER(:pattern)', { pattern: `%${pattern}%` })
+      .where('LOWER(member.name) LIKE LOWER(:pattern)', {
+        pattern: `%${pattern}%`,
+      })
       .leftJoinAndSelect('member.band', 'band')
       .orderBy('member.name', 'ASC')
       .getMany();
@@ -81,4 +83,3 @@ export class MembersRepository extends Repository<Member> {
       .getMany();
   }
 }
-

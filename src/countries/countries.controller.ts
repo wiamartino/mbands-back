@@ -27,9 +27,7 @@ export class CountriesController {
   }
 
   @Get()
-  findAll(
-    @Query() pagination: PaginationQueryDto = new PaginationQueryDto(),
-  ) {
+  findAll(@Query() pagination: PaginationQueryDto = new PaginationQueryDto()) {
     return this.countriesService.findAll(pagination);
   }
 

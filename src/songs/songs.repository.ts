@@ -70,7 +70,9 @@ export class SongsRepository extends Repository<Song> {
    */
   async searchByTitle(pattern: string): Promise<Song[]> {
     return this.createQueryBuilder('song')
-      .where('LOWER(song.title) LIKE LOWER(:pattern)', { pattern: `%${pattern}%` })
+      .where('LOWER(song.title) LIKE LOWER(:pattern)', {
+        pattern: `%${pattern}%`,
+      })
       .leftJoinAndSelect('song.band', 'band')
       .leftJoinAndSelect('song.albums', 'albums')
       .getMany();

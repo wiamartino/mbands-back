@@ -135,11 +135,15 @@ describe('AuthService', () => {
 
       const result = await service.login(mockUser);
 
-      expect(jwtService.sign).toHaveBeenNthCalledWith(1, {
-        sub: mockUser.userId,
-        username: mockUser.username,
-        email: mockUser.email,
-      }, expect.any(Object));
+      expect(jwtService.sign).toHaveBeenNthCalledWith(
+        1,
+        {
+          sub: mockUser.userId,
+          username: mockUser.username,
+          email: mockUser.email,
+        },
+        expect.any(Object),
+      );
       expect(jwtService.sign).toHaveBeenCalledTimes(2);
       expect(jwtService.decode).toHaveBeenCalledWith('refresh-token');
       expect(usersService.updateRefreshToken).toHaveBeenCalledWith(
@@ -147,7 +151,9 @@ describe('AuthService', () => {
         'hashed-refresh',
         expect.any(Date),
       );
-      expect(usersService.updateLastLogin).toHaveBeenCalledWith(mockUser.userId);
+      expect(usersService.updateLastLogin).toHaveBeenCalledWith(
+        mockUser.userId,
+      );
       expect(result).toEqual({
         access_token: 'access-token',
         refresh_token: 'refresh-token',
@@ -205,7 +211,9 @@ describe('AuthService', () => {
         'hashed-refresh',
         expect.any(Date),
       );
-      expect(usersService.updateLastLogin).toHaveBeenCalledWith(mockUser.userId);
+      expect(usersService.updateLastLogin).toHaveBeenCalledWith(
+        mockUser.userId,
+      );
       expect(result).toHaveProperty('access_token', 'access-token');
       expect(result).toHaveProperty('refresh_token', 'refresh-token');
       expect(result).toHaveProperty('user');

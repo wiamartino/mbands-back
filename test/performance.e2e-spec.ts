@@ -75,7 +75,9 @@ describe('Performance Tests', () => {
       );
 
       // Average should still be under normal threshold
-      expect(averageDuration).toBeLessThan(PERFORMANCE_THRESHOLDS.NORMAL_ENDPOINT);
+      expect(averageDuration).toBeLessThan(
+        PERFORMANCE_THRESHOLDS.NORMAL_ENDPOINT,
+      );
     });
   });
 
@@ -103,7 +105,9 @@ describe('Performance Tests', () => {
         }
       });
 
-      expect(averageTime).toBeLessThan(PERFORMANCE_THRESHOLDS.NORMAL_ENDPOINT * 2);
+      expect(averageTime).toBeLessThan(
+        PERFORMANCE_THRESHOLDS.NORMAL_ENDPOINT * 2,
+      );
     });
 
     it('should handle 25 concurrent requests', async () => {
@@ -130,7 +134,9 @@ describe('Performance Tests', () => {
       });
 
       // With more concurrency, we allow higher average due to rate limiting delays
-      expect(averageTime).toBeLessThan(PERFORMANCE_THRESHOLDS.NORMAL_ENDPOINT * 3);
+      expect(averageTime).toBeLessThan(
+        PERFORMANCE_THRESHOLDS.NORMAL_ENDPOINT * 3,
+      );
     });
 
     it('should handle 50 concurrent requests', async () => {
@@ -157,7 +163,9 @@ describe('Performance Tests', () => {
       });
 
       // High concurrency with rate limiting will have longer average
-      expect(averageTime).toBeLessThan(PERFORMANCE_THRESHOLDS.NORMAL_ENDPOINT * 5);
+      expect(averageTime).toBeLessThan(
+        PERFORMANCE_THRESHOLDS.NORMAL_ENDPOINT * 5,
+      );
     });
   });
 
@@ -324,7 +332,8 @@ describe('Performance Tests', () => {
       const min = sorted[0];
       const max = sorted[sorted.length - 1];
       const median = sorted[Math.floor(sorted.length / 2)];
-      const avg = responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
+      const avg =
+        responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
       const p95 = sorted[Math.floor(sorted.length * 0.95)];
       const p99 = sorted[Math.floor(sorted.length * 0.99)];
 

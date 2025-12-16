@@ -40,7 +40,9 @@ describe('Component Performance Tests', () => {
       const duration = performance.now() - startTime;
       const avgTime = duration / 1000;
 
-      console.log(`\n  Exception Filter: ${avgTime.toFixed(4)}ms per call (1000 iterations)`);
+      console.log(
+        `\n  Exception Filter: ${avgTime.toFixed(4)}ms per call (1000 iterations)`,
+      );
 
       // Should process very quickly - less than 0.1ms per call
       expect(avgTime).toBeLessThan(0.1);
@@ -77,7 +79,9 @@ describe('Component Performance Tests', () => {
       const duration = performance.now() - startTime;
       const avgTime = duration / 100;
 
-      console.log(`\n  Exception Filter (large payload): ${avgTime.toFixed(4)}ms per call`);
+      console.log(
+        `\n  Exception Filter (large payload): ${avgTime.toFixed(4)}ms per call`,
+      );
 
       // Should still handle efficiently even with large payloads
       expect(avgTime).toBeLessThan(2.5);
@@ -171,19 +175,23 @@ describe('Component Performance Tests', () => {
       let completedCount = 0;
 
       for (let i = 0; i < 100; i++) {
-        interceptor.intercept(mockContext as any, mockCallHandler as any).subscribe(() => {
-          completedCount++;
+        interceptor
+          .intercept(mockContext as any, mockCallHandler as any)
+          .subscribe(() => {
+            completedCount++;
 
-          if (completedCount === 100) {
-            const duration = performance.now() - startTime;
-            const avgTime = duration / 100;
+            if (completedCount === 100) {
+              const duration = performance.now() - startTime;
+              const avgTime = duration / 100;
 
-            console.log(`\n  Logging Interceptor: ${avgTime.toFixed(4)}ms per call (100 iterations)`);
+              console.log(
+                `\n  Logging Interceptor: ${avgTime.toFixed(4)}ms per call (100 iterations)`,
+              );
 
-            expect(avgTime).toBeLessThan(2);
-            done();
-          }
-        });
+              expect(avgTime).toBeLessThan(2);
+              done();
+            }
+          });
       }
     }, 90000);
 
@@ -224,19 +232,23 @@ describe('Component Performance Tests', () => {
       let completedCount = 0;
 
       for (let i = 0; i < 30; i++) {
-        interceptor.intercept(mockContext as any, mockCallHandler as any).subscribe(() => {
-          completedCount++;
+        interceptor
+          .intercept(mockContext as any, mockCallHandler as any)
+          .subscribe(() => {
+            completedCount++;
 
-          if (completedCount === 30) {
-            const duration = performance.now() - startTime;
-            const avgTime = duration / 30;
+            if (completedCount === 30) {
+              const duration = performance.now() - startTime;
+              const avgTime = duration / 30;
 
-            console.log(`\n  Logging Interceptor (large body): ${avgTime.toFixed(4)}ms per call`);
+              console.log(
+                `\n  Logging Interceptor (large body): ${avgTime.toFixed(4)}ms per call`,
+              );
 
-            expect(avgTime).toBeLessThan(12);
-            done();
-          }
-        });
+              expect(avgTime).toBeLessThan(12);
+              done();
+            }
+          });
       }
     }, 150000);
 
@@ -279,18 +291,22 @@ describe('Component Performance Tests', () => {
       let completedCount = 0;
 
       for (let i = 0; i < 200; i++) {
-        interceptor.intercept(mockContext as any, mockCallHandler as any).subscribe(() => {
-          completedCount++;
-          if (completedCount === 200) {
-            const duration = performance.now() - startTime;
-            const avgTime = duration / 200;
+        interceptor
+          .intercept(mockContext as any, mockCallHandler as any)
+          .subscribe(() => {
+            completedCount++;
+            if (completedCount === 200) {
+              const duration = performance.now() - startTime;
+              const avgTime = duration / 200;
 
-            console.log(`\n  Logging Interceptor (redaction): ${avgTime.toFixed(4)}ms per call (200 iterations)`);
+              console.log(
+                `\n  Logging Interceptor (redaction): ${avgTime.toFixed(4)}ms per call (200 iterations)`,
+              );
 
-            expect(avgTime).toBeLessThan(1);
-            done();
-          }
-        });
+              expect(avgTime).toBeLessThan(1);
+              done();
+            }
+          });
       }
     });
   });
@@ -356,12 +372,16 @@ describe('Component Performance Tests', () => {
 
       for (let i = 0; i < 500; i++) {
         interceptor
-          .intercept(mockCtxForInterceptor as any, mockHandlerForInterceptor as any)
+          .intercept(
+            mockCtxForInterceptor as any,
+            mockHandlerForInterceptor as any,
+          )
           .subscribe(() => {
             completedCount++;
 
             if (completedCount === 500) {
-              const interceptorDuration = (performance.now() - interceptorStart) / 500;
+              const interceptorDuration =
+                (performance.now() - interceptorStart) / 500;
 
               console.log(`\n  Performance Comparison:
     Filter: ${filterDuration.toFixed(4)}ms

@@ -69,7 +69,9 @@ export class CountriesRepository extends Repository<Country> {
    */
   async searchByName(pattern: string): Promise<Country[]> {
     return this.createQueryBuilder('country')
-      .where('LOWER(country.name) LIKE LOWER(:pattern)', { pattern: `%${pattern}%` })
+      .where('LOWER(country.name) LIKE LOWER(:pattern)', {
+        pattern: `%${pattern}%`,
+      })
       .andWhere('country.isActive = :isActive', { isActive: true })
       .orderBy('country.name', 'ASC')
       .getMany();

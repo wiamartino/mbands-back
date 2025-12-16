@@ -13,7 +13,9 @@ export class BandsRepository extends Repository<Band> {
    */
   async findByNamePattern(pattern: string): Promise<Band[]> {
     return this.createQueryBuilder('band')
-      .where('LOWER(band.name) LIKE LOWER(:pattern)', { pattern: `%${pattern}%` })
+      .where('LOWER(band.name) LIKE LOWER(:pattern)', {
+        pattern: `%${pattern}%`,
+      })
       .leftJoinAndSelect('band.country', 'country')
       .leftJoinAndSelect('band.members', 'members')
       .leftJoinAndSelect('band.albums', 'albums')

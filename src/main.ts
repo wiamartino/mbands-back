@@ -29,7 +29,9 @@ async function bootstrap() {
         bufferLogs: true,
       });
     } else {
-      console.warn(`SSL certificates not found at ${certPath} and ${keyPath}. Running in HTTP mode.`);
+      console.warn(
+        `SSL certificates not found at ${certPath} and ${keyPath}. Running in HTTP mode.`,
+      );
       app = await NestFactory.create(AppModule, { bufferLogs: true });
     }
   } else {

@@ -23,9 +23,7 @@ export class EventsController {
   }
 
   @Get()
-  findAll(
-    @Query() pagination: PaginationQueryDto = new PaginationQueryDto(),
-  ) {
+  findAll(@Query() pagination: PaginationQueryDto = new PaginationQueryDto()) {
     return this.eventsService.findAll(pagination);
   }
 

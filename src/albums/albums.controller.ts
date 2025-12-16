@@ -23,9 +23,7 @@ export class AlbumsController {
   }
 
   @Get()
-  findAll(
-    @Query() pagination: PaginationQueryDto = new PaginationQueryDto(),
-  ) {
+  findAll(@Query() pagination: PaginationQueryDto = new PaginationQueryDto()) {
     return this.albumsService.findAll(pagination);
   }
 

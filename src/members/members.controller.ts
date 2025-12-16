@@ -23,9 +23,7 @@ export class MembersController {
   }
 
   @Get()
-  findAll(
-    @Query() pagination: PaginationQueryDto = new PaginationQueryDto(),
-  ) {
+  findAll(@Query() pagination: PaginationQueryDto = new PaginationQueryDto()) {
     return this.membersService.findAll(pagination);
   }
 
