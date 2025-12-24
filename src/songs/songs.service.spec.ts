@@ -146,7 +146,11 @@ describe('SongsService', () => {
       id: 1,
       deletedAt: null,
     } as any);
-    repository.update.mockResolvedValue({ affected: 1, raw: [], generatedMaps: [] });
+    repository.update.mockResolvedValue({
+      affected: 1,
+      raw: [],
+      generatedMaps: [],
+    });
 
     await service.remove(1);
     expect(repository.findOne).toHaveBeenCalledWith({

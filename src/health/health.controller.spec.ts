@@ -61,14 +61,14 @@ describe('HealthController', () => {
         status: 'ok' as any,
         details: { database: { status: 'up' } },
       };
-      jest
-        .spyOn(healthCheckService, 'check')
-        .mockImplementation((async (indicators) => {
-          // Execute the health check function
-          const checkFn = indicators[0];
-          await checkFn();
-          return mockHealthStatus;
-        }) as any);
+      jest.spyOn(healthCheckService, 'check').mockImplementation((async (
+        indicators,
+      ) => {
+        // Execute the health check function
+        const checkFn = indicators[0];
+        await checkFn();
+        return mockHealthStatus;
+      }) as any);
       jest
         .spyOn(typeOrmHealthIndicator, 'pingCheck')
         .mockResolvedValue({ database: { status: 'up' } } as any);

@@ -84,9 +84,9 @@ describe('BandsService - Optimistic Locking', () => {
         affected: 0,
       });
 
-      await expect(
-        bandsService.update(bandId, updateDto),
-      ).rejects.toThrow(ConflictException);
+      await expect(bandsService.update(bandId, updateDto)).rejects.toThrow(
+        ConflictException,
+      );
 
       expect(bandsRepository.update).toHaveBeenCalledWith(
         { id: bandId, version: mockBand.version },
@@ -97,7 +97,11 @@ describe('BandsService - Optimistic Locking', () => {
     it('should successfully update when version matches', async () => {
       const bandId = 1;
       const updateDto = { name: 'The Rolling Stones' };
-      const updatedBand = { ...mockBand, name: 'The Rolling Stones', version: 2 };
+      const updatedBand = {
+        ...mockBand,
+        name: 'The Rolling Stones',
+        version: 2,
+      };
 
       (bandsRepository.findOne as jest.Mock).mockResolvedValueOnce(mockBand);
 
@@ -124,9 +128,9 @@ describe('BandsService - Optimistic Locking', () => {
 
       (bandsRepository.findOne as jest.Mock).mockResolvedValueOnce(null);
 
-      await expect(
-        bandsService.update(bandId, updateDto),
-      ).rejects.toThrow(NotFoundException);
+      await expect(bandsService.update(bandId, updateDto)).rejects.toThrow(
+        NotFoundException,
+      );
 
       expect(bandsRepository.update).not.toHaveBeenCalled();
     });
@@ -137,13 +141,15 @@ describe('BandsService - Optimistic Locking', () => {
 
       (bandsRepository.findOne as jest.Mock).mockResolvedValueOnce(mockBand);
 
-      const dbError = new Error('duplicate key value violates unique constraint');
+      const dbError = new Error(
+        'duplicate key value violates unique constraint',
+      );
       (dbError as any).code = '23505';
       (bandsRepository.update as jest.Mock).mockRejectedValueOnce(dbError);
 
-      await expect(
-        bandsService.update(bandId, updateDto),
-      ).rejects.toThrow(ConflictException);
+      await expect(bandsService.update(bandId, updateDto)).rejects.toThrow(
+        ConflictException,
+      );
     });
   });
 
@@ -168,9 +174,9 @@ describe('BandsService - Optimistic Locking', () => {
 
       await bandsService.update(bandId, updateDto1);
 
-      await expect(
-        bandsService.update(bandId, updateDto2),
-      ).rejects.toThrow(ConflictException);
+      await expect(bandsService.update(bandId, updateDto2)).rejects.toThrow(
+        ConflictException,
+      );
 
       expect(bandsRepository.update).toHaveBeenNthCalledWith(
         1,

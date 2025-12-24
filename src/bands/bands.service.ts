@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateBandDto } from './dto/create-band.dto';
 import { UpdateBandDto } from './dto/update-band.dto';
 import { InjectRepository } from '@nestjs/typeorm';

@@ -230,7 +230,8 @@ describe('AuthService', () => {
     it('should throw ConflictException for existing email', async () => {
       const dbError = new Error('duplicate key value');
       (dbError as any).code = '23505';
-      (dbError as any).detail = 'Key (email)=(newuser@example.com) already exists.';
+      (dbError as any).detail =
+        'Key (email)=(newuser@example.com) already exists.';
       mockUsersService.create.mockRejectedValue(dbError);
 
       await expect(service.register(registerDto)).rejects.toThrow(

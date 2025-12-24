@@ -19,7 +19,11 @@ describe('JwtAuthGuard', () => {
 
   describe('handleRequest', () => {
     it('should return user when authentication is successful', () => {
-      const user = { userId: 1, username: 'testuser', email: 'test@example.com' };
+      const user = {
+        userId: 1,
+        username: 'testuser',
+        email: 'test@example.com',
+      };
       const result = guard.handleRequest(null, user, null);
       expect(result).toEqual(user);
     });

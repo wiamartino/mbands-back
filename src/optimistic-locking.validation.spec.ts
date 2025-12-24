@@ -83,7 +83,11 @@ describe('Optimistic Locking Validation', () => {
     describe('Version Field Validation', () => {
       it('should increment version on successful update', async () => {
         const updateDto = { name: 'Updated Beatles' };
-        const updatedBand = { ...mockBand, name: 'Updated Beatles', version: 2 };
+        const updatedBand = {
+          ...mockBand,
+          name: 'Updated Beatles',
+          version: 2,
+        };
 
         jest.spyOn(repository, 'findOne').mockResolvedValueOnce(mockBand);
         jest.spyOn(repository, 'update').mockResolvedValueOnce({
@@ -91,7 +95,9 @@ describe('Optimistic Locking Validation', () => {
           raw: {},
           generatedMaps: [],
         } as UpdateResult);
-        jest.spyOn(repository, 'findOneWithRelations').mockResolvedValueOnce(updatedBand);
+        jest
+          .spyOn(repository, 'findOneWithRelations')
+          .mockResolvedValueOnce(updatedBand);
 
         const result = await service.update(1, updateDto);
 
@@ -199,13 +205,11 @@ describe('Optimistic Locking Validation', () => {
             generatedMaps: [],
           } as UpdateResult); // User 2's update fails
 
-        jest
-          .spyOn(repository, 'findOneWithRelations')
-          .mockResolvedValueOnce({
-            ...mockBand,
-            name: 'User 1 Update',
-            version: 2,
-          });
+        jest.spyOn(repository, 'findOneWithRelations').mockResolvedValueOnce({
+          ...mockBand,
+          name: 'User 1 Update',
+          version: 2,
+        });
 
         // User 1 succeeds
         const result1 = await service.update(1, user1UpdateDto);
@@ -247,7 +251,9 @@ describe('Optimistic Locking Validation', () => {
             raw: {},
             generatedMaps: [],
           } as UpdateResult);
-          jest.spyOn(repository, 'findOneWithRelations').mockResolvedValueOnce(next);
+          jest
+            .spyOn(repository, 'findOneWithRelations')
+            .mockResolvedValueOnce(next);
 
           const result = await service.update(1, { name: updates[i].name });
           expect(result.version).toBe(updates[i].version + 1);
@@ -257,7 +263,9 @@ describe('Optimistic Locking Validation', () => {
 
     describe('Database Constraint Handling', () => {
       it('should handle unique constraint violations (code 23505)', async () => {
-        const uniqueError = new Error('duplicate key value violates unique constraint');
+        const uniqueError = new Error(
+          'duplicate key value violates unique constraint',
+        );
         (uniqueError as any).code = '23505';
         (uniqueError as any).detail = 'Key (name)=(duplicate) already exists.';
 
@@ -355,9 +363,9 @@ describe('Optimistic Locking Validation', () => {
         generatedMaps: [],
       } as UpdateResult);
 
-      await expect(
-        service.update(1, { name: 'Conflicted' }),
-      ).rejects.toThrow(ConflictException);
+      await expect(service.update(1, { name: 'Conflicted' })).rejects.toThrow(
+        ConflictException,
+      );
     });
   });
 
@@ -435,9 +443,9 @@ describe('Optimistic Locking Validation', () => {
         generatedMaps: [],
       } as UpdateResult);
 
-      await expect(
-        service.update(1, { title: 'Conflicted' }),
-      ).rejects.toThrow(ConflictException);
+      await expect(service.update(1, { title: 'Conflicted' })).rejects.toThrow(
+        ConflictException,
+      );
     });
   });
 

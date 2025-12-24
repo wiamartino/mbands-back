@@ -156,7 +156,9 @@ describe('BandsService', () => {
 
       const result = await service.update(1, updateBandDto);
 
-      expect(mockBandsRepository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
+      expect(mockBandsRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
       expect(mockBandsRepository.update).toHaveBeenCalledWith(
         { id: 1, version: 1 },
         updateBandDto,

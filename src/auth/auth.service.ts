@@ -110,7 +110,7 @@ export class AuthService {
       this.generateTokens(payload);
 
     const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
-    
+
     // Update both refresh token and last login in a single operation
     // to prevent concurrent login race conditions
     await this.userService.updateRefreshTokenAndLastLogin(

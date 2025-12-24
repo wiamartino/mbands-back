@@ -52,7 +52,11 @@ describe('JwtStrategy', () => {
       } as any;
       jest.spyOn(usersService, 'findById').mockResolvedValue(mockUser);
 
-      const payload = { sub: 1, username: 'testuser', email: 'test@example.com' };
+      const payload = {
+        sub: 1,
+        username: 'testuser',
+        email: 'test@example.com',
+      };
       const result = await strategy.validate(payload);
 
       expect(usersService.findById).toHaveBeenCalledWith(1);

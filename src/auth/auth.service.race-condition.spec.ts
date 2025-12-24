@@ -47,7 +47,9 @@ describe('AuthService - Race Condition Fixes', () => {
           useValue: {
             sign: jest.fn(),
             verify: jest.fn(),
-            decode: jest.fn(() => ({ exp: Math.floor(Date.now() / 1000) + 604800 })),
+            decode: jest.fn(() => ({
+              exp: Math.floor(Date.now() / 1000) + 604800,
+            })),
           },
         },
         {
@@ -75,7 +77,9 @@ describe('AuthService - Race Condition Fixes', () => {
         lastName: 'Doe',
       };
 
-      const dbError = new Error('duplicate key value violates unique constraint');
+      const dbError = new Error(
+        'duplicate key value violates unique constraint',
+      );
       (dbError as any).code = '23505';
       (dbError as any).detail = 'Key (username)=(john) already exists.';
 
@@ -95,7 +99,9 @@ describe('AuthService - Race Condition Fixes', () => {
         lastName: 'Doe',
       };
 
-      const dbError = new Error('duplicate key value violates unique constraint');
+      const dbError = new Error(
+        'duplicate key value violates unique constraint',
+      );
       (dbError as any).code = '23505';
       (dbError as any).detail = 'Key (email)=(john@test.com) already exists.';
 
@@ -118,9 +124,9 @@ describe('AuthService - Race Condition Fixes', () => {
       (usersService.create as jest.Mock).mockResolvedValueOnce(mockUser);
       (jwtService.sign as jest.Mock).mockReturnValue('token');
       (configService.get as jest.Mock).mockReturnValue('secret');
-      (usersService.updateRefreshTokenAndLastLogin as jest.Mock).mockResolvedValueOnce(
-        undefined,
-      );
+      (
+        usersService.updateRefreshTokenAndLastLogin as jest.Mock
+      ).mockResolvedValueOnce(undefined);
 
       await authService.register(registerDto);
 
@@ -134,9 +140,9 @@ describe('AuthService - Race Condition Fixes', () => {
       (usersService.findOne as jest.Mock).mockResolvedValueOnce(mockUser);
       (jwtService.sign as jest.Mock).mockReturnValue('token');
       (configService.get as jest.Mock).mockReturnValue('secret');
-      (usersService.updateRefreshTokenAndLastLogin as jest.Mock).mockResolvedValueOnce(
-        undefined,
-      );
+      (
+        usersService.updateRefreshTokenAndLastLogin as jest.Mock
+      ).mockResolvedValueOnce(undefined);
 
       await authService.login(mockUser);
 
