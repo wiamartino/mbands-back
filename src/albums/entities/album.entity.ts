@@ -12,6 +12,7 @@ import {
   DeleteDateColumn,
   JoinColumn,
   Index,
+  VersionColumn,
 } from 'typeorm';
 
 @Entity()
@@ -25,7 +26,7 @@ export class Album {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: 1 })
+  @VersionColumn()
   version: number;
 
   @ApiProperty({

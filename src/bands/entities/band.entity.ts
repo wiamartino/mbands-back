@@ -15,6 +15,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   Index,
+  VersionColumn,
 } from 'typeorm';
 
 @Entity()
@@ -29,7 +30,7 @@ export class Band {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: 1 })
+  @VersionColumn()
   version: number;
 
   @ApiProperty({

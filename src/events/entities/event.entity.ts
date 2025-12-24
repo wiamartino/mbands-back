@@ -8,6 +8,7 @@ import {
   DeleteDateColumn,
   JoinColumn,
   Index,
+  VersionColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { Band } from '../../bands/entities/band.entity';
@@ -24,7 +25,7 @@ export class Event {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: 1 })
+  @VersionColumn()
   version: number;
 
   @ApiProperty({
