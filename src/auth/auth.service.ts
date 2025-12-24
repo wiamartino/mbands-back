@@ -41,28 +41,27 @@ export class AuthService {
   async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
     const { username, password, email, firstName, lastName } = registerDto;
 
-    const existingUser = await this.userService.findOne(username);
-    if (existingUser) {
-      throw new ConflictException('Username already exists');
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newUser: Partial<User> = {
+        username,
+        password: hashedPassword,
+        email,
+        firstName: firstName || null,
+        lastName: lastName || null,
+        isActive: true,
+      };
+
+      const user = await this.userService.create(newUser as User);
+      return this.buildAuthResponse(user);
+    } catch (error: any) {
+      // Handle PostgreSQL unique constraint violations (code 23505)
+      if (error.code === '23505') {
+        const field = error.detail?.includes('username') ? 'Username' : 'Email';
+        throw new ConflictException(`${field} already exists`);
+      }
+      throw error;
     }
-
-    const existingEmail = await this.userService.findByEmail(email);
-    if (existingEmail) {
-      throw new ConflictException('Email already exists');
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser: Partial<User> = {
-      username,
-      password: hashedPassword,
-      email,
-      firstName: firstName || null,
-      lastName: lastName || null,
-      isActive: true,
-    };
-
-    const user = await this.userService.create(newUser as User);
-    return this.buildAuthResponse(user);
   }
 
   async refreshTokens(refreshToken: string): Promise<AuthResponseDto> {
@@ -111,12 +110,14 @@ export class AuthService {
       this.generateTokens(payload);
 
     const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
-    await this.userService.updateRefreshToken(
+    
+    // Update both refresh token and last login in a single operation
+    // to prevent concurrent login race conditions
+    await this.userService.updateRefreshTokenAndLastLogin(
       user.userId,
       refreshTokenHash,
       refreshExpiresAt,
     );
-    await this.userService.updateLastLogin(user.userId);
 
     const userResponse: UserResponseDto = {
       id: user.userId.toString(),

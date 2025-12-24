@@ -47,4 +47,18 @@ export class UsersService {
       refreshTokenExpiresAt: refreshTokenExpiresAt ?? null,
     });
   }
+
+  async updateRefreshTokenAndLastLogin(
+    userId: number,
+    refreshTokenHash: string | null,
+    refreshTokenExpiresAt?: Date | null,
+  ): Promise<void> {
+    // Atomic update to prevent concurrent login race conditions
+    // Both fields are updated in a single database operation
+    await this.usersRepository.update(userId, {
+      refreshTokenHash,
+      refreshTokenExpiresAt: refreshTokenExpiresAt ?? null,
+      lastLoginAt: new Date(),
+    });
+  }
 }

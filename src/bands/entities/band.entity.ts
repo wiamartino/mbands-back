@@ -29,6 +29,9 @@ export class Band {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ default: 1 })
+  version: number;
+
   @ApiProperty({
     description: 'Name of the band',
     example: 'The Beatles',

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entities/event.entity';
@@ -36,8 +36,34 @@ export class EventsService {
     });
   }
 
-  update(id: number, updateEventDto: UpdateEventDto) {
-    return this.eventsRepository.update(id, updateEventDto);
+  async update(id: number, updateEventDto: UpdateEventDto): Promise<Event> {
+    const event = await this.eventsRepository.findOne({ where: { id } });
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+
+    try {
+      // Optimistic locking: TypeORM will check version automatically
+      const result = await this.eventsRepository.update(
+        { id, version: event.version },
+        updateEventDto,
+      );
+
+      if (result.affected === 0) {
+        throw new ConflictException(
+          'Event was modified by another user. Please refresh and try again.',
+        );
+      }
+
+      return this.findOne(id);
+    } catch (error: any) {
+      if (error.message?.includes('version') || error.code === '23505') {
+        throw new ConflictException(
+          'Event was modified by another user. Please refresh and try again.',
+        );
+      }
+      throw error;
+    }
   }
 
   async remove(id: number): Promise<UpdateResult> {

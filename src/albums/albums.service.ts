@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
@@ -56,8 +56,34 @@ export class AlbumsService {
     });
   }
 
-  async update(id: number, updateAlbumDto: UpdateAlbumDto) {
-    return this.albumsRepository.update(id, updateAlbumDto);
+  async update(id: number, updateAlbumDto: UpdateAlbumDto): Promise<Album> {
+    const album = await this.albumsRepository.findOne({ where: { id } });
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+
+    try {
+      // Optimistic locking: TypeORM will check version automatically
+      const result = await this.albumsRepository.update(
+        { id, version: album.version },
+        updateAlbumDto,
+      );
+
+      if (result.affected === 0) {
+        throw new ConflictException(
+          'Album was modified by another user. Please refresh and try again.',
+        );
+      }
+
+      return this.findOne(id);
+    } catch (error: any) {
+      if (error.message?.includes('version') || error.code === '23505') {
+        throw new ConflictException(
+          'Album was modified by another user. Please refresh and try again.',
+        );
+      }
+      throw error;
+    }
   }
 
   async remove(id: number): Promise<UpdateResult> {

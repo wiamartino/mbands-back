@@ -24,6 +24,9 @@ export class Event {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ default: 1 })
+  version: number;
+
   @ApiProperty({
     description: 'Title of the event',
     example: 'Live at Wembley Stadium',

@@ -25,6 +25,9 @@ export class Album {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ default: 1 })
+  version: number;
+
   @ApiProperty({
     description: 'Name of the album',
     example: 'Abbey Road',

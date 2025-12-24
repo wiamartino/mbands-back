@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import { CreateBandDto } from './dto/create-band.dto';
 import { UpdateBandDto } from './dto/update-band.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Band } from './entities/band.entity';
 import { Country } from '../countries/entities/country.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository, UpdateResult, DataSource } from 'typeorm';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { buildPaginationParams } from '../common/pagination';
 import { BandsRepository } from './bands.repository';
@@ -15,6 +15,7 @@ export class BandsService {
     private readonly bandsRepository: BandsRepository,
     @InjectRepository(Country)
     private readonly countriesRepository: Repository<Country>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async create(createBandDto: CreateBandDto): Promise<Band> {
@@ -43,8 +44,34 @@ export class BandsService {
   }
 
   async update(id: number, updateBandDto: UpdateBandDto): Promise<Band> {
-    await this.bandsRepository.update(id, updateBandDto);
-    return this.findOne(id);
+    const band = await this.bandsRepository.findOne({ where: { id } });
+    if (!band) {
+      throw new NotFoundException('Band not found');
+    }
+
+    try {
+      // Optimistic locking: TypeORM will check version automatically
+      const result = await this.bandsRepository.update(
+        { id, version: band.version },
+        updateBandDto,
+      );
+
+      if (result.affected === 0) {
+        throw new ConflictException(
+          'Band was modified by another user. Please refresh and try again.',
+        );
+      }
+
+      return this.findOne(id);
+    } catch (error: any) {
+      // Catch optimistic lock version mismatch errors
+      if (error.message?.includes('version') || error.code === '23505') {
+        throw new ConflictException(
+          'Band was modified by another user. Please refresh and try again.',
+        );
+      }
+      throw error;
+    }
   }
 
   async remove(id: number): Promise<UpdateResult> {
