@@ -167,14 +167,27 @@ describe('BandsService', () => {
   });
 
   describe('remove', () => {
-    it('should delete a band', async () => {
-      const deleteResult: DeleteResult = { affected: 1, raw: {} };
-      mockBandsRepository.softDelete.mockResolvedValue(deleteResult);
+    it('should soft delete a band idempotently with version check', async () => {
+      const updateResult = { affected: 1, raw: [], generatedMaps: [] };
+      mockBandsRepository.findOne.mockResolvedValueOnce({
+        id: 1,
+        version: 1,
+        deletedAt: null,
+      });
+      mockBandsRepository.update.mockResolvedValue(updateResult);
 
       const result = await service.remove(1);
 
-      expect(mockBandsRepository.softDelete).toHaveBeenCalledWith(1);
-      expect(result).toEqual(deleteResult);
+      expect(mockBandsRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 1 },
+        withDeleted: true,
+        select: ['id', 'deletedAt', 'version'],
+      });
+      expect(mockBandsRepository.update).toHaveBeenCalledWith(
+        { id: 1, deletedAt: expect.any(Object), version: 1 },
+        { deletedAt: expect.any(Date) },
+      );
+      expect(result).toEqual(updateResult);
     });
   });
 

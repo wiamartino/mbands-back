@@ -15,6 +15,7 @@ export class CountriesRepository extends Repository<Country> {
     return this.find({
       skip,
       take,
+      order: { createdAt: 'ASC', id: 'ASC' },
       relations: {
         bands: {
           albums: true,

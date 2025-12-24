@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { buildPaginationParams } from '../common/pagination';
+import { idempotentSoftDelete } from '../common/soft-delete';
 
 @Injectable()
 export class EventsService {
@@ -25,6 +26,7 @@ export class EventsService {
     return this.eventsRepository.find({
       skip,
       take,
+      order: { createdAt: 'ASC', id: 'ASC' },
       relations: ['band'],
     });
   }
@@ -67,6 +69,6 @@ export class EventsService {
   }
 
   async remove(id: number): Promise<UpdateResult> {
-    return this.eventsRepository.softDelete(id);
+    return idempotentSoftDelete(this.eventsRepository, id);
   }
 }

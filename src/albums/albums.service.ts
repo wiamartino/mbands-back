@@ -6,6 +6,7 @@ import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { buildPaginationParams } from '../common/pagination';
+import { idempotentSoftDelete } from '../common/soft-delete';
 
 @Injectable()
 export class AlbumsService {
@@ -25,6 +26,7 @@ export class AlbumsService {
     return this.albumsRepository.find({
       skip,
       take,
+      order: { createdAt: 'ASC', id: 'ASC' },
       relations: {
         band: true,
         songs: true,
@@ -87,6 +89,6 @@ export class AlbumsService {
   }
 
   async remove(id: number): Promise<UpdateResult> {
-    return this.albumsRepository.softDelete(id);
+    return idempotentSoftDelete(this.albumsRepository, id);
   }
 }

@@ -72,6 +72,7 @@ describe('EventsService', () => {
       expect(mockRepository.find).toHaveBeenCalledWith({
         skip: 0,
         take: 10,
+        order: { createdAt: 'ASC', id: 'ASC' },
         relations: ['band'],
       });
       expect(result).toEqual(mockEvents);
@@ -117,12 +118,25 @@ describe('EventsService', () => {
   });
 
   describe('remove', () => {
-    it('should delete an event', async () => {
-      mockRepository.softDelete.mockResolvedValue({ affected: 1 });
+    it('should soft delete an event idempotently with version check', async () => {
+      mockRepository.findOne.mockResolvedValueOnce({
+        id: 1,
+        version: 1,
+        deletedAt: null,
+      });
+      mockRepository.update.mockResolvedValue({ affected: 1 });
 
       await service.remove(1);
 
-      expect(mockRepository.softDelete).toHaveBeenCalledWith(1);
+      expect(mockRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 1 },
+        withDeleted: true,
+        select: ['id', 'deletedAt', 'version'],
+      });
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { id: 1, deletedAt: expect.any(Object), version: 1 },
+        { deletedAt: expect.any(Date) },
+      );
     });
   });
 });

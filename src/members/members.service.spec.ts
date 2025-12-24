@@ -74,6 +74,7 @@ describe('MembersService', () => {
       expect(mockRepository.find).toHaveBeenCalledWith({
         skip: 0,
         take: 10,
+        order: { createdAt: 'ASC', id: 'ASC' },
         relations: {
           band: {
             country: true,
@@ -130,14 +131,27 @@ describe('MembersService', () => {
   });
 
   describe('remove', () => {
-    it('should delete a member', async () => {
-      const deleteResult = { affected: 1, raw: [], generatedMaps: [] };
-      mockRepository.softDelete.mockResolvedValue(deleteResult);
+    it('should soft delete a member idempotently with version check', async () => {
+      const updateResult = { affected: 1, raw: [], generatedMaps: [] };
+      mockRepository.findOne.mockResolvedValueOnce({
+        id: 1,
+        version: 1,
+        deletedAt: null,
+      });
+      mockRepository.update.mockResolvedValue(updateResult);
 
       const result = await service.remove(1);
 
-      expect(mockRepository.softDelete).toHaveBeenCalledWith(1);
-      expect(result).toEqual(deleteResult);
+      expect(mockRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 1 },
+        withDeleted: true,
+        select: ['id', 'deletedAt', 'version'],
+      });
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { id: 1, deletedAt: expect.any(Object), version: 1 },
+        { deletedAt: expect.any(Date) },
+      );
+      expect(result).toEqual(updateResult);
     });
   });
 });

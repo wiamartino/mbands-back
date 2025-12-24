@@ -89,6 +89,7 @@ describe('SongsService', () => {
     expect(repository.find).toHaveBeenCalledWith({
       skip: 0,
       take: 10,
+      order: { createdAt: 'ASC', id: 'ASC' },
       relations: {
         band: {
           country: true,
@@ -140,14 +141,22 @@ describe('SongsService', () => {
     expect(result.affected).toBe(1);
   });
 
-  it('should remove a song', async () => {
-    repository.softDelete.mockResolvedValue({
-      affected: 1,
-      raw: [],
-      generatedMaps: [],
-    });
+  it('should soft delete a song idempotently with version check', async () => {
+    repository.findOne.mockResolvedValueOnce({
+      id: 1,
+      deletedAt: null,
+    } as any);
+    repository.update.mockResolvedValue({ affected: 1, raw: [], generatedMaps: [] });
 
     await service.remove(1);
-    expect(repository.softDelete).toHaveBeenCalledWith(1);
+    expect(repository.findOne).toHaveBeenCalledWith({
+      where: { id: 1 },
+      withDeleted: true,
+      select: ['id', 'deletedAt', 'version'],
+    });
+    expect(repository.update).toHaveBeenCalledWith(
+      { id: 1, deletedAt: expect.any(Object) },
+      { deletedAt: expect.any(Date) },
+    );
   });
 });

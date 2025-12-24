@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Band } from './entities/band.entity';
 import { Country } from '../countries/entities/country.entity';
 import { Repository, UpdateResult, DataSource } from 'typeorm';
+import { idempotentSoftDelete } from '../common/soft-delete';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { buildPaginationParams } from '../common/pagination';
 import { BandsRepository } from './bands.repository';
@@ -75,7 +76,10 @@ export class BandsService {
   }
 
   async remove(id: number): Promise<UpdateResult> {
-    return this.bandsRepository.softDelete(id);
+    return idempotentSoftDelete(
+      this.bandsRepository as unknown as Repository<Band>,
+      id,
+    );
   }
 
   async searchByName(name: string): Promise<Band[]> {

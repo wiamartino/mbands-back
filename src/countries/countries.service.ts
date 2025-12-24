@@ -6,6 +6,7 @@ import { UpdateResult } from 'typeorm';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { buildPaginationParams } from '../common/pagination';
 import { CountriesRepository } from './countries.repository';
+import { idempotentSoftDelete } from '../common/soft-delete';
 
 @Injectable()
 export class CountriesService {
@@ -64,8 +65,7 @@ export class CountriesService {
   }
 
   async remove(id: number): Promise<UpdateResult> {
-    await this.findOne(id);
-    return this.countriesRepository.softDelete(id);
+    return idempotentSoftDelete(this.countriesRepository as any, id);
   }
 
   async softRemove(id: number): Promise<Country> {

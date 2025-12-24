@@ -92,6 +92,7 @@ export class BandsRepository extends Repository<Band> {
     return this.find({
       skip,
       take,
+      order: { createdAt: 'ASC', id: 'ASC' },
       relations: {
         country: true,
         members: true,

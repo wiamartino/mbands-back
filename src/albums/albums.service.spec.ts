@@ -47,12 +47,13 @@ describe('AlbumsService', () => {
     expect(result.id).toBe(1);
   });
 
-  it('findAll() should call repository find', async () => {
+  it('findAll() should call repository find with stable ordering', async () => {
     mockAlbumsRepository.find.mockResolvedValue([]);
     const result = await service.findAll({ page: 1, limit: 10 });
     expect(mockAlbumsRepository.find).toHaveBeenCalledWith({
       skip: 0,
       take: 10,
+      order: { createdAt: 'ASC', id: 'ASC' },
       relations: {
         band: true,
         songs: true,
@@ -94,9 +95,22 @@ describe('AlbumsService', () => {
     expect(result).toEqual({ ...mockAlbum, title: 'Updated' });
   });
 
-  it('remove() should call repository delete', async () => {
-    mockAlbumsRepository.softDelete.mockResolvedValue({ affected: 1 });
+  it('remove() should soft delete idempotently with version check', async () => {
+    mockAlbumsRepository.findOne.mockResolvedValueOnce({
+      id: 1,
+      version: 1,
+      deletedAt: null,
+    });
+    mockAlbumsRepository.update.mockResolvedValue({ affected: 1 });
     await service.remove(1);
-    expect(mockAlbumsRepository.softDelete).toHaveBeenCalledWith(1);
+    expect(mockAlbumsRepository.findOne).toHaveBeenCalledWith({
+      where: { id: 1 },
+      withDeleted: true,
+      select: ['id', 'deletedAt', 'version'],
+    });
+    expect(mockAlbumsRepository.update).toHaveBeenCalledWith(
+      { id: 1, deletedAt: expect.any(Object), version: 1 },
+      { deletedAt: expect.any(Date) },
+    );
   });
 });
