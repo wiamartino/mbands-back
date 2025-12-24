@@ -39,6 +39,7 @@ describe('AuthService', () => {
     findById: jest.fn(),
     updateRefreshToken: jest.fn(),
     updateLastLogin: jest.fn(),
+    updateRefreshTokenAndLastLogin: jest.fn(),
   };
 
   const mockJwtService = {
@@ -132,6 +133,9 @@ describe('AuthService', () => {
         exp: Math.floor(Date.now() / 1000) + 3600,
       });
       mockedBcrypt.hash.mockResolvedValue('hashed-refresh' as never);
+      mockUsersService.updateRefreshTokenAndLastLogin.mockResolvedValue(
+        undefined,
+      );
 
       const result = await service.login(mockUser);
 
@@ -146,13 +150,10 @@ describe('AuthService', () => {
       );
       expect(jwtService.sign).toHaveBeenCalledTimes(2);
       expect(jwtService.decode).toHaveBeenCalledWith('refresh-token');
-      expect(usersService.updateRefreshToken).toHaveBeenCalledWith(
+      expect(usersService.updateRefreshTokenAndLastLogin).toHaveBeenCalledWith(
         mockUser.userId,
         'hashed-refresh',
         expect.any(Date),
-      );
-      expect(usersService.updateLastLogin).toHaveBeenCalledWith(
-        mockUser.userId,
       );
       expect(result).toEqual({
         access_token: 'access-token',
@@ -180,9 +181,10 @@ describe('AuthService', () => {
     };
 
     it('should register user successfully', async () => {
-      mockUsersService.findOne.mockResolvedValue(null);
-      mockUsersService.findByEmail.mockResolvedValue(null);
       mockUsersService.create.mockResolvedValue(mockUser);
+      mockUsersService.updateRefreshTokenAndLastLogin.mockResolvedValue(
+        undefined,
+      );
       mockedBcrypt.hash
         .mockResolvedValueOnce('hashedPassword' as never)
         .mockResolvedValueOnce('hashed-refresh' as never);
@@ -195,8 +197,6 @@ describe('AuthService', () => {
 
       const result = await service.register(registerDto);
 
-      expect(usersService.findOne).toHaveBeenCalledWith(registerDto.username);
-      expect(usersService.findByEmail).toHaveBeenCalledWith(registerDto.email);
       expect(bcrypt.hash).toHaveBeenCalledWith(registerDto.password, 10);
       expect(usersService.create).toHaveBeenCalledWith({
         username: registerDto.username,
@@ -206,13 +206,10 @@ describe('AuthService', () => {
         lastName: registerDto.lastName,
         isActive: true,
       });
-      expect(usersService.updateRefreshToken).toHaveBeenCalledWith(
+      expect(usersService.updateRefreshTokenAndLastLogin).toHaveBeenCalledWith(
         mockUser.userId,
         'hashed-refresh',
         expect.any(Date),
-      );
-      expect(usersService.updateLastLogin).toHaveBeenCalledWith(
-        mockUser.userId,
       );
       expect(result).toHaveProperty('access_token', 'access-token');
       expect(result).toHaveProperty('refresh_token', 'refresh-token');
@@ -220,17 +217,21 @@ describe('AuthService', () => {
     });
 
     it('should throw ConflictException for existing username', async () => {
-      mockUsersService.findOne.mockResolvedValue(mockUser);
+      const dbError = new Error('duplicate key value');
+      (dbError as any).code = '23505';
+      (dbError as any).detail = 'Key (username)=(newuser) already exists.';
+      mockUsersService.create.mockRejectedValue(dbError);
 
       await expect(service.register(registerDto)).rejects.toThrow(
         ConflictException,
       );
-      expect(usersService.findByEmail).not.toHaveBeenCalled();
     });
 
     it('should throw ConflictException for existing email', async () => {
-      mockUsersService.findOne.mockResolvedValue(null);
-      mockUsersService.findByEmail.mockResolvedValue(mockUser);
+      const dbError = new Error('duplicate key value');
+      (dbError as any).code = '23505';
+      (dbError as any).detail = 'Key (email)=(newuser@example.com) already exists.';
+      mockUsersService.create.mockRejectedValue(dbError);
 
       await expect(service.register(registerDto)).rejects.toThrow(
         ConflictException,

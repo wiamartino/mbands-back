@@ -17,6 +17,7 @@ describe('EventsService', () => {
     update: jest.fn(),
     delete: jest.fn(),
     softDelete: jest.fn(),
+    findOneWithRelations: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -95,13 +96,23 @@ describe('EventsService', () => {
   describe('update', () => {
     it('should update an event', async () => {
       const updateEventDto: UpdateEventDto = { title: 'Updated Event' };
+      const mockEvent = { id: 1, version: 1, title: 'Event' };
       const updateResult = { affected: 1 };
+
+      mockRepository.findOne.mockResolvedValueOnce(mockEvent);
       mockRepository.update.mockResolvedValue(updateResult);
+      mockRepository.findOne.mockResolvedValueOnce({
+        ...mockEvent,
+        title: 'Updated Event',
+      });
 
       const result = await service.update(1, updateEventDto);
 
-      expect(mockRepository.update).toHaveBeenCalledWith(1, updateEventDto);
-      expect(result).toEqual(updateResult);
+      expect(mockRepository.update).toHaveBeenCalledWith(
+        { id: 1, version: 1 },
+        updateEventDto,
+      );
+      expect(result).toEqual({ ...mockEvent, title: 'Updated Event' });
     });
   });
 

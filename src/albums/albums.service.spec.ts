@@ -11,6 +11,7 @@ const mockAlbumsRepository = {
   update: jest.fn(),
   delete: jest.fn(),
   softDelete: jest.fn(),
+  findOneWithRelations: jest.fn(),
 };
 
 describe('AlbumsService', () => {
@@ -78,12 +79,19 @@ describe('AlbumsService', () => {
   });
 
   it('update() should call repository update', async () => {
+    const mockAlbum = { id: 1, version: 1 };
+    mockAlbumsRepository.findOne.mockResolvedValueOnce(mockAlbum);
     mockAlbumsRepository.update.mockResolvedValue({ affected: 1 });
-    const result = await service.update(1, { title: 'Updated' } as any);
-    expect(mockAlbumsRepository.update).toHaveBeenCalledWith(1, {
+    mockAlbumsRepository.findOne.mockResolvedValueOnce({
+      ...mockAlbum,
       title: 'Updated',
     });
-    expect(result).toEqual({ affected: 1 });
+    const result = await service.update(1, { title: 'Updated' } as any);
+    expect(mockAlbumsRepository.update).toHaveBeenCalledWith(
+      { id: 1, version: 1 },
+      { title: 'Updated' },
+    );
+    expect(result).toEqual({ ...mockAlbum, title: 'Updated' });
   });
 
   it('remove() should call repository delete', async () => {

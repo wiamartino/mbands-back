@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository, DeleteResult } from 'typeorm';
+import { Repository, DeleteResult, DataSource } from 'typeorm';
 import { BandsService } from './bands.service';
 import { Band } from './entities/band.entity';
 import { Country } from '../countries/entities/country.entity';
@@ -36,6 +36,10 @@ describe('BandsService', () => {
     findOne: jest.fn(),
   };
 
+  const mockDataSource = {
+    createQueryRunner: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -47,6 +51,10 @@ describe('BandsService', () => {
         {
           provide: getRepositoryToken(Country),
           useValue: mockCountriesRepository,
+        },
+        {
+          provide: DataSource,
+          useValue: mockDataSource,
         },
       ],
     }).compile();
@@ -139,15 +147,21 @@ describe('BandsService', () => {
   describe('update', () => {
     it('should update a band', async () => {
       const updateBandDto: UpdateBandDto = { name: 'Updated Band' };
-      const updatedBand = { id: 1, name: 'Updated Band' };
+      const updatedBand = { id: 1, name: 'Updated Band', version: 1 };
+      const mockBand = { id: 1, name: 'Band', version: 1 };
 
+      mockBandsRepository.findOne.mockResolvedValueOnce(mockBand);
       mockBandsRepository.update.mockResolvedValue({ affected: 1 });
-      jest.spyOn(service, 'findOne').mockResolvedValue(updatedBand as Band);
+      mockBandsRepository.findOneWithRelations.mockResolvedValue(updatedBand);
 
       const result = await service.update(1, updateBandDto);
 
-      expect(mockBandsRepository.update).toHaveBeenCalledWith(1, updateBandDto);
-      expect(service.findOne).toHaveBeenCalledWith(1);
+      expect(mockBandsRepository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
+      expect(mockBandsRepository.update).toHaveBeenCalledWith(
+        { id: 1, version: 1 },
+        updateBandDto,
+      );
+      expect(mockBandsRepository.findOneWithRelations).toHaveBeenCalledWith(1);
       expect(result).toEqual(updatedBand);
     });
   });
