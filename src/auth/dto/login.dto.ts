@@ -14,13 +14,13 @@ export class LoginDto {
   username: string;
 
   @ApiProperty({
-    description: 'Password for login',
-    example: 'password123',
-    minLength: 6,
+    description: 'Password for login (minimum 8 characters)',
+    example: 'MyPassword123',
+    minLength: 8,
     maxLength: 255,
   })
   @IsString()
   @IsNotEmpty()
-  @Length(6, 255)
+  @Length(8, 255)
   password: string;
 }

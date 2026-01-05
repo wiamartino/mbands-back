@@ -15,6 +15,8 @@ async function bootstrap() {
 
   // Setup HTTPS if enabled
   const httpsEnabled = process.env.HTTPS_ENABLED === 'true';
+  const isProduction = process.env.NODE_ENV === 'production';
+  
   if (httpsEnabled) {
     const certPath = process.env.SSL_CERT_PATH || './certs/certificate.pem';
     const keyPath = process.env.SSL_KEY_PATH || './certs/private-key.pem';
@@ -29,12 +31,17 @@ async function bootstrap() {
         bufferLogs: true,
       });
     } else {
-      console.warn(
-        `SSL certificates not found at ${certPath} and ${keyPath}. Running in HTTP mode.`,
-      );
+      const errorMsg = `SSL certificates not found at ${certPath} and ${keyPath}`;
+      if (isProduction) {
+        throw new Error(`HTTPS enforced in production: ${errorMsg}`);
+      }
+      console.warn(`${errorMsg}. Running in HTTP mode.`);
       app = await NestFactory.create(AppModule, { bufferLogs: true });
     }
   } else {
+    if (isProduction) {
+      throw new Error('HTTPS_ENABLED must be true in production environment');
+    }
     app = await NestFactory.create(AppModule, { bufferLogs: true });
   }
   // app.useLogger(app.get(Logger)); // Commented out - LoggerModule not configured
