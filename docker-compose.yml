@@ -1,6 +1,19 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-appuser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-appuser}
+      POSTGRES_DB: ${DB_NAME:-name_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - '5432:5432'
+
   app:
     build:
       context: .
@@ -19,18 +32,6 @@ services:
       HTTPS_ENABLED: ${HTTPS_ENABLED:-true}
       SSL_CERT_PATH: ${SSL_CERT_PATH:-/app/certs/certificate.pem}
       SSL_KEY_PATH: ${SSL_KEY_PATH:-/app/certs/private-key.pem}
-
-  db:
-    image: postgres:15-alpine
-    container_name: postgres_db
-    environment:
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
 
 volumes:
   postgres_data:
