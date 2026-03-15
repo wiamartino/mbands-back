@@ -101,7 +101,9 @@ async function bootstrap() {
     .build();
   if (process.env.NODE_ENV !== 'production') {
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api', app, document);
+    SwaggerModule.setup('api', app, document, {
+      jsonDocumentUrl: 'api/json',
+    });
   }
 
   const port = Number(process.env.PORT) || 3000;
